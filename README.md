@@ -1,4 +1,5 @@
-MyTokenCost
+MyTokenCost.com
+
 MyTokenCost is a real-time monitoring and audit tool designed to visualize the true physical footprint of AI infrastructure. As AI adoption scales, the hidden costs—specifically in energy consumption and water cooling—become critical metrics for operational compliance and sustainability.
 
 Purpose
