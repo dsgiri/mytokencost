@@ -1,144 +1,1520 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyTokenCost | Live AI Infrastructure Monitor</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <meta name="description" content="Real-time monitoring and compliance auditing for the physical costs of AI infrastructure. Track energy, water, and compute resource footprints for industrial environments.">
-<meta name="robots" content="index, follow">
-<meta name="author" content="MyTokenCost">
-<link rel="canonical" href="https://mytokencost.com/">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .bg-map {
-            background-color: #0f172a;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 400'%3E%3Cpath fill='%231e293b' fill-opacity='0.4' d='M800 400H0V0h800v400zm-400-50c-66.27 0-120-53.73-120-120s53.73-120 120-120 120 53.73 120 120-53.73 120-120 120z'/%3E%3C/svg%3E");
-            background-size: 50%;
-            background-repeat: repeat;
-        }
-        @keyframes morph-ts {
-            0%, 40% { d: path('M7 8h10M12 8v10'); } /* T Shape */
-            60%, 100% { d: path('M12 3v18 M9 7h6a2 2 0 010 4h-6a2 2 0 000 4h6'); } /* $ Shape */
-        }
-        .animate-morph { animation: morph-ts 3s ease-in-out infinite; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyTokenCost | US Infrastructure & Compliance Audit Hub</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="description" content="Calculate and audit the physical utility costs of AI, municipal, and healthcare infrastructure. Track energy draw, water footprint, and Texas grid compliance.">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="MyTokenCost">
+  <link rel="canonical" href="https://mytokencost.com/">
+
+  <!-- Open Graph / Social Previews -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mytokencost.com/">
+  <meta property="og:title" content="MyTokenCost | Live Infrastructure Monitor">
+  <meta property="og:description" content="Real-time physical cost tracking (energy, water, compute) and compliance auditing for US regional facilities.">
+  <meta property="og:image" content="https://mytokencost.com/og-image.png">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;550;600;700;800&family=Space+Grotesk:wght@400;700&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .header-font {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    /* Theme-specific styles managed smoothly via body class */
+    body.theme-dark {
+      background-color: #070d19;
+      color: #f8fafc;
+    }
+    body.theme-light {
+      background-color: #f8fafc;
+      color: #0f172a;
+    }
+
+    /* Custom range input styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      background: #1e293b;
+      height: 6px;
+      border-radius: 3px;
+    }
+    body.theme-light input[type="range"] {
+      background: #e2e8f0;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      background: #00f0ff;
+      height: 16px;
+      width: 16px;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(0, 240, 255, 0.8);
+    }
+    body.theme-light input[type="range"]::-webkit-slider-thumb {
+      background: #0ea5e9;
+      box-shadow: 0 0 8px rgba(14, 165, 233, 0.4);
+    }
+
+    /* Tech grid background pattern */
+    .bg-grid {
+      background-size: 30px 30px;
+      transition: background-image 0.3s ease;
+    }
+    body.theme-dark .bg-grid {
+      background-image: linear-gradient(rgba(0, 240, 255, 0.012) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(0, 240, 255, 0.012) 1px, transparent 1px);
+    }
+    body.theme-light .bg-grid {
+      background-image: linear-gradient(rgba(15, 23, 42, 0.015) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(15, 23, 42, 0.015) 1px, transparent 1px);
+    }
+
+    /* Card shadows and borders */
+    .theme-card {
+      transition: all 0.3s ease;
+    }
+    body.theme-dark .theme-card {
+      background-color: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(0, 240, 255, 0.15);
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.03);
+    }
+    body.theme-dark .theme-card:hover {
+      border: 1px solid rgba(0, 240, 255, 0.4);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.08);
+    }
+    body.theme-light .theme-card {
+      background-color: #ffffff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+    }
+    body.theme-light .theme-card:hover {
+      border-color: #cbd5e1;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+    }
+  </style>
 </head>
-<body class="p-4 md:p-8 bg-map">
+<body class="theme-dark bg-grid min-h-screen flex flex-col justify-between">
 
-    <header class="flex flex-wrap justify-between items-center mb-10 gap-4">
-        <div class="flex items-center">
-            <svg class="w-10 h-10 text-cyan-400 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"></circle>
-                <path class="animate-morph" d="M7 8h10M12 8v10"></path>
-            </svg>
-            <div>
-                <h1 class="text-2xl font-bold tracking-tight">MyTokenCost<span class="text-cyan-400">.com</span></h1>
-                <p class="text-slate-400 text-sm">Real-time AI Infrastructure & Compliance Audit</p>
-            </div>
+  <!-- NAVIGATION HEADER -->
+  <header class="border-b border-slate-800/80 bg-slate-950/85 backdrop-blur-md sticky top-0 z-40 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <!-- Brand Logo (Cyan circular T) -->
+        <svg class="w-8 h-8" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="16" cy="16" r="14" stroke="#00f0ff" stroke-width="2.5" id="header-logo-circle"/>
+          <path d="M10 11h12v3.5h-4.25V22h-3.5v-7.5H10V11z" fill="#00f0ff" id="header-logo-letter"/>
+        </svg>
+        <div class="flex flex-col">
+          <span class="header-font font-bold text-lg tracking-wider text-white leading-none">
+            MyToken<span class="text-[#00f0ff]" id="brand-accent">Cost</span>.com
+          </span>
+          <span class="text-[9px] text-slate-400 tracking-tight transition-colors" id="header-subtitle">Real-time AI Infrastructure & Compliance Audit</span>
         </div>
-        <div class="flex gap-2">
-            <button onclick="changeModel('gpt4o')" class="px-4 py-2 bg-slate-800 rounded-lg text-sm hover:bg-slate-700 transition">GPT-4o</button>
-            <button onclick="changeModel('claude3')" class="px-4 py-2 bg-slate-800 rounded-lg text-sm hover:bg-slate-700 transition">Claude 3.5</button>
-            <button onclick="changeModel('gemini')" class="px-4 py-2 bg-slate-800 rounded-lg text-sm hover:bg-slate-700 transition">Gemini 1.5</button>
-        </div>
-    </header>
+      </div>
+      
+      <!-- Nav Controls -->
+      <div class="flex items-center space-x-4">
+        <a href="#compliance-section" class="hidden lg:inline-flex text-xs text-slate-400 hover:text-white transition uppercase tracking-wider font-semibold">
+          Compliance Calc
+        </a>
+        <a href="#telemetry-section" class="hidden lg:inline-flex text-xs text-slate-400 hover:text-white transition uppercase tracking-wider font-semibold">
+          US Grid Telemetry
+        </a>
 
-    <main class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div class="glass p-6 rounded-2xl border-l-4 border-cyan-400 flex items-center gap-4">
-            <svg class="w-8 h-8 text-cyan-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
-            <div>
-                <p class="text-slate-400 text-xs uppercase font-semibold tracking-wider">Total Tokens</p>
-                <h2 id="tokenCount" class="text-3xl font-bold">0</h2>
-            </div>
-        </div>
-        <div class="glass p-6 rounded-2xl border-l-4 border-blue-400 flex items-center gap-4">
-            <svg class="w-8 h-8 text-blue-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-            <div>
-                <p class="text-slate-400 text-xs uppercase font-semibold tracking-wider">Energy Consumed</p>
-                <h2 id="energyCount" class="text-3xl font-bold">0.00</h2>
-                <p class="text-blue-400 text-sm">kWh Usage</p>
-            </div>
-        </div>
-        <div class="glass p-6 rounded-2xl border-l-4 border-emerald-400 flex items-center gap-4">
-            <svg class="w-8 h-8 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.707.353a2 2 0 01-1.79 0l-.707-.353a6 6 0 00-3.86-.517l-2.387.477a2 2 0 00-1.022.547M5 11l2-6h10l2 6M5 11h14M5 11v8a2 2 0 002 2h10a2 2 0 002-2v-8"></path></svg>
-            <div>
-                <p class="text-slate-400 text-xs uppercase font-semibold tracking-wider">Water Footprint</p>
-                <h2 id="waterCount" class="text-3xl font-bold">0.00</h2>
-                <p class="text-emerald-400 text-sm">Gallons (Cooling)</p>
-            </div>
-        </div>
-    </main>
+        <!-- Premium Theme Toggle Switch -->
+        <button onclick="toggleTheme()" class="p-2 rounded-lg bg-slate-900 border border-slate-800 hover:border-slate-700 transition" aria-label="Toggle Theme">
+          <!-- Moon Icon (Dark Mode Active) -->
+          <svg id="theme-moon" class="w-4 h-4 text-[#00f0ff] hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+          </svg>
+          <!-- Sun Icon (Light Mode Active) -->
+          <svg id="theme-sun" class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.364l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+          </svg>
+        </button>
 
-    <section class="glass p-6 rounded-2xl grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="w-full"><canvas id="tokenChart"></canvas></div>
-        <div class="w-full"><canvas id="energyChart"></canvas></div>
-        <div class="w-full"><canvas id="waterChart"></canvas></div>
-    </section>
+        <a href="#audit-panel" class="bg-[#00f0ff] hover:bg-[#00d8e6] text-slate-950 font-bold px-4 py-2 rounded text-xs tracking-wider uppercase transition" id="book-audit-btn">
+          Book Audit ($1,499)
+        </a>
+      </div>
+    </div>
+  </header>
 
-    <section class="max-w-4xl mx-auto mt-12 glass p-8 rounded-2xl text-center">
-        <h2 class="text-2xl font-bold mb-4">Stay Updated on AI Sustainability</h2>
-        <p class="text-slate-400 mb-6">Join our waitlist for early access to the full compliance suite and infrastructure blueprints.</p>
+  <!-- ==================== COGNITIVE EXPERIENCE UPGRADE: THE 5-SECOND HERO ==================== -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-6 text-center space-y-4">
+    <div class="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 transition-colors" id="hero-badge">
+      <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+      <span>B2B Physical Utility & Compliance Auditor</span>
+    </div>
+    <h1 class="header-font text-4xl sm:text-6xl font-extrabold tracking-tight leading-none transition-colors" id="hero-title">
+      The Physical Auditor <br class="hidden sm:inline">for <span class="text-[#00f0ff]" id="hero-accent">AI Infrastructure</span>
+    </h1>
+    <p class="text-sm sm:text-lg max-w-2xl mx-auto text-slate-400 transition-colors" id="hero-subtitle-desc">
+      We map "hidden" real-world utility footprints—grid load, water cooling drain, and backup generator runtime limits—directly to state regulatory limits. Simple. Secure. 100% Non-invasive.
+    </p>
+  </section>
+
+  <!-- ==================== SECTION 1: LIVE TOKEN MONITOR & TABS ==================== -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 w-full space-y-6">
+    
+    <!-- Top Row: Section Label & 4 Strategy Control Tabs (Compliance Default) -->
+    <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-800 pb-4" id="section1-header">
+      <div class="space-y-1">
+        <h2 class="header-font text-xl font-bold tracking-wide flex items-center">
+          <span class="relative flex h-3 w-3 mr-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00f0ff] opacity-75" id="ping-outer"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-[#00f0ff]" id="ping-inner"></span>
+          </span>
+          Live Compute Resource Monitor
+        </h2>
+        <p class="text-xs text-slate-400" id="monitor-desc">Track raw metrics mapped against local regulatory and capacity thresholds.</p>
+      </div>
+
+      <!-- Strategic Focus Tabs -->
+      <div class="flex flex-wrap gap-1.5 p-1 rounded-lg w-full lg:w-auto transition-colors bg-slate-950 border border-slate-850" id="tabs-container">
+        <button id="tab-compliance" onclick="switchTelemetryTab('compliance')" class="flex-1 lg:flex-none px-4 py-2 rounded text-xs font-semibold bg-slate-800 text-[#00f0ff] border border-[#00f0ff]/20 transition-all flex items-center justify-center space-x-1.5">
+          <span>🚨</span>
+          <span>Compliance</span>
+        </button>
+        <button id="tab-us" onclick="switchTelemetryTab('us')" class="flex-1 lg:flex-none px-4 py-2 rounded text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center justify-center space-x-1.5">
+          <span>🇺🇸</span>
+          <span>US Grid</span>
+        </button>
+        <button id="tab-texas" onclick="switchTelemetryTab('texas')" class="flex-1 lg:flex-none px-4 py-2 rounded text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center justify-center space-x-1.5">
+          <span>🌵</span>
+          <span>Texas (ERCOT)</span>
+        </button>
+        <button id="tab-my" onclick="switchTelemetryTab('my')" class="flex-1 lg:flex-none px-4 py-2 rounded text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center justify-center space-x-1.5">
+          <span>⚡</span>
+          <span>My Infra</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Active Telemetry Header Alert Card & Welcome Info -->
+    <div id="tab-alert-banner" class="bg-[#00f0ff]/5 border border-[#00f0ff]/20 rounded-lg p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 text-xs leading-relaxed">
+      <div class="flex items-start space-x-3">
+        <span id="tab-banner-icon" class="text-2xl mt-0.5">🚨</span>
+        <div class="space-y-1">
+          <span id="tab-banner-title" class="font-bold block text-sm">Active Regulatory Stress Model</span>
+          <span id="tab-banner-desc" class="text-slate-400 text-[11px] block">
+            We translate cumulative model-inference cycles directly into physical water cooling drain and electric grid dependencies. 
+            <strong>Below:</strong> Switch industry inputs to simulate your regional risk headroom.
+          </span>
+        </div>
+      </div>
+      <div class="flex space-x-2 w-full md:w-auto shrink-0">
+        <!-- Model Selection Pills inside the monitor view -->
+        <select id="monitor-model-select" onchange="changeMonitorModel(this.value)" class="bg-slate-950 border border-slate-800 text-[11px] text-[#00f0ff] rounded px-2.5 py-2 focus:outline-none focus:border-[#00f0ff] w-full md:w-auto font-mono">
+          <option value="gpt4o">Inference Profile: GPT-4o (Frontier Core)</option>
+          <option value="claude35">Inference Profile: Claude 3.5 Sonnet</option>
+          <option value="gemini15">Inference Profile: Gemini 1.5 Pro</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Metrics Row (3 Large Cards matching image_cecf08.png) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      
+      <!-- Card 1: Total Tokens -->
+      <div class="theme-card rounded-xl p-5 flex items-center space-x-5">
+        <div class="w-12 h-12 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400" id="card-icon-1">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+          </svg>
+        </div>
+        <div class="space-y-0.5">
+          <span class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Total Simulated Tokens</span>
+          <span id="counter-tokens" class="block text-2xl font-extrabold font-mono leading-none">36,769</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Energy Consumed -->
+      <div class="theme-card rounded-xl p-5 flex items-center space-x-5">
+        <div class="w-12 h-12 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400" id="card-icon-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <div class="space-y-0.5">
+          <span class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Energy Consumed</span>
+          <span id="counter-energy" class="block text-2xl font-extrabold font-mono leading-none">4.92</span>
+          <span class="block text-[10px] text-blue-500 font-semibold tracking-wider" id="card-unit-2">kWh Grid Load</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Water Footprint -->
+      <div class="theme-card rounded-xl p-5 flex items-center space-x-5">
+        <div class="w-12 h-12 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400" id="card-icon-3">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+          </svg>
+        </div>
+        <div class="space-y-0.5">
+          <span class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">Water Footprint</span>
+          <span id="counter-water" class="block text-2xl font-extrabold font-mono leading-none">3.20</span>
+          <span class="block text-[10px] text-emerald-500 font-semibold tracking-wider" id="card-unit-3">Gallons (Cooling)</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Charts Row (Optimized to stack full-width on mobile, side-by-side on desktop md: and up) -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 rounded-xl p-5 border transition-colors border-slate-800" id="charts-row">
+      
+      <!-- Chart 1: Tokens -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center text-xs">
+          <span class="font-bold flex items-center" id="chart-tokens-title">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 mr-2"></span>
+            Tokens (<span id="chart-tokens-label" class="text-cyan-400 text-[11px] font-mono">tokens | ceiling</span>)
+          </span>
+          <span id="chart-tokens-val" class="font-mono font-bold text-slate-400">--</span>
+        </div>
+        <div class="relative w-full h-40 rounded border overflow-hidden transition-colors bg-slate-950/85 border-slate-850" id="chart-canvas-container-1">
+          <canvas id="chart-tokens" class="w-full h-full"></canvas>
+        </div>
+      </div>
+
+      <!-- Chart 2: kWh -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center text-xs">
+          <span class="font-bold flex items-center" id="chart-energy-title">
+            <span class="w-2 h-2 rounded-full bg-blue-400 mr-2"></span>
+            kWh (<span id="chart-energy-label" class="text-blue-400 text-[11px] font-mono">load | ceiling</span>)
+          </span>
+          <span id="chart-energy-val" class="font-mono font-bold text-slate-400">--</span>
+        </div>
+        <div class="relative w-full h-40 rounded border overflow-hidden transition-colors bg-slate-950/85 border-slate-850" id="chart-canvas-container-2">
+          <canvas id="chart-energy" class="w-full h-full"></canvas>
+        </div>
+      </div>
+
+      <!-- Chart 3: Gallons -->
+      <div class="space-y-2">
+        <div class="flex justify-between items-center text-xs">
+          <span class="font-bold flex items-center" id="chart-water-title">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 mr-2"></span>
+            Gallons (<span id="chart-water-label" class="text-emerald-400 text-[11px] font-mono">gph | ceiling</span>)
+          </span>
+          <span id="chart-water-val" class="font-mono font-bold text-slate-400">--</span>
+        </div>
+        <div class="relative w-full h-40 rounded border overflow-hidden transition-colors bg-slate-950/85 border-slate-850" id="chart-canvas-container-3">
+          <canvas id="chart-water" class="w-full h-full"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- ==================== SECTION 2: COMPLIANCE RISK ASSESSMENT CALCULATOR ==================== -->
+  <section id="compliance-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full space-y-8 border-t border-slate-800 pt-10">
+    
+    <!-- Top Heading & Industry Picker -->
+    <div class="text-center space-y-4 max-w-3xl mx-auto">
+      <div class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#00f0ff]/10 text-[#00f0ff] border border-[#00f0ff]/20" id="section2-pill">
+        Infrastructure Audit Tools
+      </div>
+      <h2 class="header-font text-2xl md:text-4xl font-extrabold tracking-tight leading-none">
+        Assess Your Texas Utility & Compliance Risk
+      </h2>
+      <p class="text-slate-400 text-xs max-w-2xl mx-auto" id="section2-desc">
+        Select your facility type below to generate a real-time visual assessment of your infrastructure compliance risk.
+      </p>
+      
+      <!-- Segmented Industry Switch Tabs (Categorized clearly matching target profile) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+        <button id="btn-datacenter" onclick="switchIndustry('datacenter')" class="py-4 px-4 rounded-lg font-bold text-sm transition flex flex-col items-center justify-center space-y-2 bg-slate-900 border-2 border-[#00f0ff]">
+          <span class="text-2xl">🏢</span>
+          <span class="tracking-wide font-bold">AI Data Centers</span>
+          <span class="text-[10px] font-normal text-cyan-400" id="btn-datacenter-subtitle">ERCOT Grid Load Rules</span>
+        </button>
+        <button id="btn-water" onclick="switchIndustry('water')" class="py-4 px-4 rounded-lg text-slate-400 font-bold text-sm transition flex flex-col items-center justify-center space-y-2 bg-slate-950 border border-slate-800">
+          <span class="text-2xl">🚰</span>
+          <span class="tracking-wide font-bold">Water Utilities</span>
+          <span class="text-[10px] font-normal text-slate-500" id="btn-water-subtitle">TCEQ EPP Preparedness</span>
+        </button>
+        <button id="btn-care" onclick="switchIndustry('care')" class="py-4 px-4 rounded-lg text-slate-400 font-bold text-sm transition flex flex-col items-center justify-center space-y-2 bg-slate-950 border border-slate-800">
+          <span class="text-2xl">🏥</span>
+          <span class="tracking-wide font-bold">Senior Care Homes</span>
+          <span class="text-[10px] font-normal text-slate-500" id="btn-care-subtitle">HHSC Emergency Power</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Core Calculator Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Left Input Panel -->
+      <section class="lg:col-span-5 space-y-6">
+        <div class="theme-card rounded-lg p-6 space-y-6">
+          <div class="flex justify-between items-center">
+            <h2 id="calculator-title" class="header-font text-lg font-bold flex items-center">
+              <span id="industry-emoji" class="mr-2">🏢</span>
+              <span id="industry-label">AI Infrastructure Details</span>
+            </h2>
+            <span class="text-[10px] bg-slate-950 px-2 py-1 rounded text-[#00f0ff] uppercase tracking-wider font-mono" id="params-badge">Parameters</span>
+          </div>
+
+          <hr class="border-slate-800" id="calc-divider">
+
+          <!-- Dynamic Form Container -->
+          <div id="calculator-inputs" class="space-y-6">
+            <!-- Injected via JavaScript -->
+          </div>
+        </div>
+
+        <!-- Non-Invasive Info -->
+        <div class="rounded-lg p-5 border text-xs leading-relaxed space-y-3 bg-slate-950 border-slate-800" id="explainer-card">
+          <h3 class="font-bold flex items-center">
+            <span class="w-1.5 h-1.5 bg-[#00f0ff] rounded-full mr-2" id="explainer-bullet"></span>
+            Non-Invasive Architecture Analysis
+          </h3>
+          <p id="context-explainer" class="text-slate-400">
+            Our diagnostic calculation framework determines your compliance readiness score using publicly available regional grid rules and standard facility equipment indices. No private network access required.
+          </p>
+        </div>
+      </section>
+
+      <!-- Right Visual HUD Panel -->
+      <section class="lg:col-span-7 space-y-6">
         
-        <form class="flex flex-col md:flex-row gap-4 justify-center items-center">
-            <input type="email" placeholder="Enter your email" class="px-6 py-3 rounded-lg bg-slate-800 border border-slate-700 w-full md:w-80 focus:outline-none focus:border-cyan-400">
-            <button type="submit" class="px-8 py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-900 font-bold rounded-lg transition">Join Waitlist</button>
-        </form>
+        <!-- Live Monitor Component -->
+        <div class="theme-card rounded-lg p-6 flex flex-col justify-between">
+          <div class="flex justify-between items-center mb-4">
+            <div class="flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 bg-cyan-400 rounded-full animate-pulse" id="hud-pulse"></span>
+              <span class="header-font text-sm uppercase tracking-widest text-[#00f0ff] font-bold" id="hud-title">Estimated Load Curve vs. Regulatory Threshold</span>
+            </div>
+            <span class="text-[10px] font-mono text-slate-500 uppercase tracking-wider">HUD System Telemetry</span>
+          </div>
 
-        <div class="mt-8 pt-8 border-t border-slate-700">
-            <p class="text-sm text-slate-500">
-                Have questions or want to see a feature? 
-                <a href="mailto:remindtag@gmail.com" class="text-cyan-400 hover:underline font-semibold">Send us feedback directly</a>.
-            </p>
+          <!-- Dynamic Canvas Container -->
+          <div class="relative w-full aspect-[16/9] bg-slate-950 rounded border border-slate-800/80 overflow-hidden" id="main-canvas-container">
+            <canvas id="telemetry-canvas" class="absolute inset-0 w-full h-full"></canvas>
+          </div>
+
+          <!-- Real-Time Metrics -->
+          <div class="grid grid-cols-3 gap-4 mt-6 text-center border-t border-slate-800 pt-4" id="hud-metrics-row">
+            <div>
+              <span class="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">Your Peak Draw</span>
+              <span id="output-load" class="block text-lg font-mono font-bold mt-1">--</span>
+            </div>
+            <div>
+              <span class="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">State Limit</span>
+              <span id="output-limit" class="block text-lg font-mono font-bold text-slate-400 mt-1">--</span>
+            </div>
+            <div>
+              <span class="block text-[10px] font-semibold uppercase tracking-wider text-slate-400">Risk Severity</span>
+              <span id="output-risk" class="block text-lg font-mono font-bold text-emerald-400 mt-1">--</span>
+            </div>
+          </div>
         </div>
-    </section>
 
-    <script>
-        let currentModel = 'gpt4o';
-        let stats = { tokens: 0, energy: 0, water: 0 };
-        const rates = {
-            gpt4o: { tokens: 150, energy: 0.02, water: 0.013 },
-            claude3: { tokens: 120, energy: 0.015, water: 0.010 },
-            gemini: { tokens: 200, energy: 0.025, water: 0.016 }
-        };
+        <!-- Liability Risk Scorecard -->
+        <div class="rounded-lg p-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-950 border border-slate-850" id="risk-scorecard">
+          <div class="space-y-1">
+            <span class="text-xs text-slate-400 uppercase tracking-wider">Required State Filing Status</span>
+            <div class="flex items-center space-x-2 mt-1">
+              <span id="compliance-pill" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold">
+                --
+              </span>
+            </div>
+            <p id="compliance-text" class="text-xs text-slate-400 pt-1">Analyzing inputs...</p>
+          </div>
+          <div class="space-y-1">
+            <span id="financial-metric-label" class="text-xs text-slate-400 uppercase tracking-wider">Estimated Penalty Liability</span>
+            <span id="cost-leak" class="block text-2xl font-extrabold text-[#00f0ff] glow-text font-mono mt-1">$0.00</span>
+            <p id="financial-explainer" class="text-[10px] text-slate-500">Based on standard Texas administrative fine indices.</p>
+          </div>
+        </div>
 
-        function changeModel(model) { currentModel = model; }
+      </section>
 
-        function createChart(id, label, color) {
-            return new Chart(document.getElementById(id).getContext('2d'), {
-                type: 'line',
-                data: { labels: Array(20).fill(''), datasets: [{ label: label + ' (🌎|🇺🇸)', data: Array(20).fill(0), borderColor: color, backgroundColor: color + '20', fill: true }] },
-                options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { labels: { color: '#f8fafc', boxWidth: 10 } } }, scales: { y: { ticks: { color: '#94a3b8' } }, x: { display: false } } }
-            });
+    </div>
+
+  </section>
+
+  <!-- ==================== SECTION 3: US GRID TELEMETRY & INFORMATIONAL BOARD ==================== -->
+  <section id="telemetry-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    <div class="rounded-xl p-6 border space-y-8 bg-slate-900/40 border-slate-800" id="section3-container">
+      
+      <!-- Section Title & US Real-time Cumulative Counters -->
+      <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-6 border-b border-slate-800" id="section3-header">
+        <div class="space-y-1.5">
+          <div class="flex items-center space-x-2.5">
+            <span class="relative flex h-3 w-3">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00f0ff] opacity-75" id="section3-ping-outer"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-[#00f0ff]" id="section3-ping-inner"></span>
+            </span>
+            <h3 class="header-font text-2xl font-bold tracking-tight">US Regional Grid & Token Telemetry</h3>
+          </div>
+          <p class="text-xs text-slate-400 max-w-2xl">
+            Live telemetry tracking active US compute hubs. Translating cumulative model-inference cycles into physical grid strain (MWh) and water cooling draw across regional interconnections today.
+          </p>
+        </div>
+
+        <!-- Live Estimated US Grid Stats -->
+        <div class="flex flex-wrap gap-4 lg:gap-8 p-4 rounded-lg border w-full lg:w-auto bg-slate-950/80 border-slate-800/80" id="section3-stats-row">
+          <div class="space-y-0.5 min-w-[120px]">
+            <span class="block text-[10px] font-semibold text-slate-500 uppercase tracking-widest">US Tokens Today</span>
+            <span id="live-global-tokens" class="block text-base font-mono font-bold text-[#00f0ff] glow-text">6,428,120,000</span>
+          </div>
+          <div class="space-y-0.5 min-w-[100px]">
+            <span class="block text-[10px] font-semibold text-slate-500 uppercase tracking-widest">Grid Load (MWh)</span>
+            <span id="live-global-mwh" class="block text-base font-mono font-bold">18.83</span>
+          </div>
+          <div class="space-y-0.5 min-w-[100px]">
+            <span class="block text-[10px] font-semibold text-slate-500 uppercase tracking-widest font-mono">Water Cooling Draw</span>
+            <span id="live-global-water" class="block text-base font-mono font-bold text-cyan-400">12,856 Gal</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informative Regional Grid Profile Matrix -->
+      <div class="space-y-4">
+        <h3 class="text-xs font-semibold uppercase tracking-widest text-[#00f0ff] flex items-center" id="section3-matrix-header">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          Active US Interconnection Profiles & Resource Intensity Ratings
+        </h3>
+
+        <!-- Comparative Grid (US Specific Regional Grids) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="section3-matrix-cards">
+          
+          <!-- Texas ERCOT Card -->
+          <div class="theme-card p-4 rounded-lg space-y-3.5 hover:border-slate-700/80 transition-all">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold">Texas Interconnect (ERCOT)</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-red-500/10 text-red-400 border border-red-500/20">Critical Alert</span>
+            </div>
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between">
+                <span class="text-slate-500">Major Hub:</span>
+                <span class="text-slate-400 font-medium">Austin / Dallas Clusters</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Grid Constraints:</span>
+                <span class="text-slate-400 font-medium font-mono">High Summer Load Peaks</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Fuel Sourcing Mix:</span>
+                <span class="text-slate-400 font-medium">Gas & Wind Dominant</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Primary Rule:</span>
+                <span class="text-cyan-400 font-semibold" id="ercot-card-accent">10 MW Large Flex Load</span>
+              </div>
+            </div>
+            <div class="pt-2 border-t border-slate-900 flex justify-between items-center text-[11px]" id="ercot-card-footer">
+              <span class="text-slate-500">Local Water Depletion:</span>
+              <span class="text-red-400 font-mono font-semibold">Extreme (TCEQ Audit)</span>
+            </div>
+          </div>
+
+          <!-- Mid-Atlantic PJM Card (Virginia) -->
+          <div class="theme-card p-4 rounded-lg space-y-3.5 hover:border-slate-700/80 transition-all">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold">PJM Interconnection</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">Transmission Limit</span>
+            </div>
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between">
+                <span class="text-slate-500">Major Hub:</span>
+                <span class="text-slate-400 font-medium">Loudoun County, VA</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Grid Constraints:</span>
+                <span class="text-slate-400 font-medium font-mono">Severe Substation Strain</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Fuel Sourcing Mix:</span>
+                <span class="text-slate-400 font-semibold font-medium">Coal & Gas Heavy</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Primary Rule:</span>
+                <span class="text-slate-400 font-medium">Utility Capacity Caps</span>
+              </div>
+            </div>
+            <div class="pt-2 border-t border-slate-900 flex justify-between items-center text-[11px]" id="pjm-card-footer">
+              <span class="text-slate-500">Local Carbon Footprint:</span>
+              <span class="text-amber-400 font-mono font-semibold">High Carbon Intensity</span>
+            </div>
+          </div>
+
+          <!-- Northwest Hydro BPA Card -->
+          <div class="theme-card p-4 rounded-lg space-y-3.5 hover:border-slate-700/80 transition-all">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold">Pacific Northwest (BPA)</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Clean Grid</span>
+            </div>
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between">
+                <span class="text-slate-500">Major Hub:</span>
+                <span class="text-slate-400 font-medium">Hillsboro, Oregon</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Grid Constraints:</span>
+                <span class="text-slate-400 font-medium font-mono">Transmission Corridors</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Fuel Sourcing Mix:</span>
+                <span class="text-emerald-400 font-semibold font-medium">90%+ Hydroelectric</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Primary Rule:</span>
+                <span class="text-slate-400 font-medium">River Temperature Laws</span>
+              </div>
+            </div>
+            <div class="pt-2 border-t border-slate-900 flex justify-between items-center text-[11px]" id="bpa-card-footer">
+              <span class="text-slate-500">Thermal Water Stress:</span>
+              <span class="text-[#00f0ff] font-mono font-semibold" id="bpa-text-accent">Highly Regulated</span>
+            </div>
+          </div>
+
+          <!-- California CAISO Card -->
+          <div class="theme-card p-4 rounded-lg space-y-3.5 hover:border-slate-700/80 transition-all">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold">California ISO (CAISO)</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">Cost Intense</span>
+            </div>
+            <div class="space-y-2 text-xs">
+              <div class="flex justify-between">
+                <span class="text-slate-500">Major Hub:</span>
+                <span class="text-slate-400 font-medium">Silicon Valley / LA</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Grid Constraints:</span>
+                <span class="text-slate-400 font-medium font-mono">Evening Ramp Strain</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-400 font-medium">Solar & Import Battery</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-slate-500">Primary Rule:</span>
+                <span class="text-slate-400 font-medium">Strict State Title 24</span>
+              </div>
+            </div>
+            <div class="pt-2 border-t border-slate-900 flex justify-between items-center text-[11px]" id="caiso-card-footer">
+              <span class="text-slate-500">Industrial Energy Rates:</span>
+              <span class="text-amber-400 font-mono font-semibold">Highest in the US</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==================== SECTION 4: B2B AUDIT BOOKING FORM ==================== -->
+  <section id="audit-panel" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+    <div class="bg-gradient-to-r from-slate-900 to-slate-950 rounded-xl p-8 border relative overflow-hidden transition-all border-[#00f0ff]/30" id="booking-gradient-card">
+      <div class="absolute -top-10 -right-10 w-40 h-40 bg-[#00f0ff]/5 rounded-full blur-3xl" id="booking-radial-glow"></div>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <!-- Left Messaging Column -->
+        <div class="space-y-4">
+          <div class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20" id="booking-badge">
+            Texas Audit Readiness Program
+          </div>
+          <h2 class="header-font text-3xl font-extrabold text-white tracking-tight leading-tight">
+            Clear Your Compliance Hurdles in Less Than 7 Days
+          </h2>
+          <p class="text-sm text-slate-400 leading-relaxed max-w-lg" id="booking-paragraph">
+            Facing immediate state regulatory deadlines? Our team compiles secure, external 
+            <strong>Black-Box Infrastructure Audits</strong> to insulate your operations. We deliver a complete, audit-ready physical documentation playbook without touching your live networks.
+          </p>
+          <div class="pt-2 flex flex-wrap gap-4 text-xs font-mono text-slate-500" id="booking-footer-labels">
+            <span class="flex items-center"><span class="w-1.5 h-1.5 bg-[#00f0ff] rounded-full mr-1.5" id="bf-dot-1"></span>ERCOT Load-Shedding SOPs</span>
+            <span class="flex items-center"><span class="w-1.5 h-1.5 bg-[#00f0ff] rounded-full mr-1.5" id="bf-dot-2"></span>TCEQ Emergency Outlines</span>
+            <span class="flex items-center"><span class="w-1.5 h-1.5 bg-[#00f0ff] rounded-full mr-1.5" id="bf-dot-3"></span>HHSC Power Safe Guides</span>
+          </div>
+        </div>
+
+        <!-- Right Form Column -->
+        <div class="bg-slate-950/80 rounded-lg p-6 border border-slate-800" id="form-container">
+          <form id="audit-lead-form" class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+              <div class="space-y-1">
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400" id="label-name">Full Name</label>
+                <input required type="text" id="lead-name" placeholder="John Doe" class="w-full bg-slate-900 border border-slate-800 rounded px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#00f0ff] transition">
+              </div>
+              <div class="space-y-1">
+                <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400" id="label-email">Corporate Email</label>
+                <input required type="email" id="lead-email" placeholder="john@enterprise.com" class="w-full bg-slate-900 border border-slate-800 rounded px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#00f0ff] transition">
+              </div>
+            </div>
+            <div class="space-y-1">
+              <label class="block text-[10px] font-bold uppercase tracking-wider text-slate-400" id="label-loc">Facility Location & Target Region</label>
+              <input required type="text" id="lead-location" placeholder="e.g. Assisted Living Facility, San Antonio TX" class="w-full bg-slate-900 border border-slate-800 rounded px-3 py-2.5 text-xs text-white focus:outline-none focus:border-[#00f0ff] transition">
+            </div>
+            <div class="pt-2">
+              <button type="submit" class="w-full bg-[#00f0ff] hover:bg-[#00d8e6] text-slate-950 font-bold py-3.5 rounded text-xs uppercase tracking-widest transition" id="submit-btn">
+                Request Custom Compliance Audit ($1,499)
+              </button>
+              <p class="text-[10px] text-center text-slate-500 mt-2">Zero commitment. 100% money-back guarantee if we don't locate operational or compliance gaps.</p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-500 transition-colors" id="site-footer">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0">
+      <div class="flex items-center space-x-2">
+        <span class="font-semibold text-slate-400">MyTokenCost</span>
+        <span>© 2026. All rights reserved.</span>
+      </div>
+      <div class="flex space-x-6 text-slate-400">
+        <a href="#audit-panel" class="hover:text-[#00f0ff] transition">SOP Blueprint Guides</a>
+        <a href="#audit-panel" class="hover:text-[#00f0ff] transition">Privacy Commitment</a>
+        <a href="https://linkedin.com" target="_blank" class="hover:text-[#00f0ff] transition">LinkedIn Community</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SUCCESS MODAL -->
+  <div id="success-modal" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div class="bg-slate-900 border border-[#00f0ff] rounded-lg p-6 max-w-md w-full space-y-4 shadow-2xl" id="modal-card">
+      <div class="w-12 h-12 bg-cyan-500/10 border border-[#00f0ff]/30 rounded-full flex items-center justify-center mx-auto">
+        <svg class="w-6 h-6 text-[#00f0ff]" fill="none" stroke="currentColor" viewBox="0 0 24 24" id="modal-checkmark">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      <div class="text-center space-y-2">
+        <h3 class="header-font text-xl font-bold text-white" id="modal-title">Compliance Request Registered</h3>
+        <p class="text-xs text-slate-400 leading-relaxed" id="modal-paragraph">
+          Our systems engineering specialists will construct an external, black-box diagnostic footprint estimate based on your parameters. We will compile and deliver your compliance gap-analysis scorecard within 1 business day.
+        </p>
+      </div>
+      <button onclick="closeModal()" class="w-full bg-[#00f0ff] hover:bg-[#00d8e6] text-slate-950 font-bold py-2.5 rounded text-xs uppercase tracking-widest transition" id="modal-close-btn">
+        Return to Monitor
+      </button>
+    </div>
+  </div>
+
+  <!-- SCRIPT ENGINE -->
+  <script>
+    // Live Tickers & Real-time Charts State (Section 1)
+    let selectedModelKey = 'gpt4o';
+    let currentActiveTab = 'compliance'; // compliance, us, texas, my
+    let isDarkMode = true; // Default theme is dark mode
+
+    // Ticking Counter Base Values
+    let tokensCount = 36769;
+    let energyCount = 4.92;
+    let waterCount = 3.20;
+
+    // Fast metric multiplier specs (Section 1)
+    const modelInferenceSpeeds = {
+      gpt4o: { tokenInc: 45, energyFactor: 0.005, waterFactor: 0.0035 },
+      claude35: { tokenInc: 58, energyFactor: 0.007, waterFactor: 0.0042 },
+      gemini15: { tokenInc: 32, energyFactor: 0.003, waterFactor: 0.0018 }
+    };
+
+    // Tracking history curves points (Side-by-side plots)
+    const MAX_POINTS = 22;
+    const historyTokens = Array(MAX_POINTS).fill(34500);
+    const historyEnergy = Array(MAX_POINTS).fill(4.50);
+    const historyWater = Array(MAX_POINTS).fill(2.90);
+
+    // Dynamic Calculations & Compliance Risk Specs (Section 2)
+    const INDUSTRIES = {
+      datacenter: {
+        id: 'datacenter',
+        emoji: '🏢',
+        label: 'AI Infrastructure details',
+        regRule: 'ERCOT Large Flexible Load (LFL) Rules',
+        limit: 10.0,
+        limitLabel: '10.0 MW',
+        metricUnit: 'MW',
+        costLabel: 'Est. Annual Grid Surcharges',
+        explainer: 'Calculated using standard ERCOT grid peak load capacity penalties.',
+        context: 'We estimate peak utility draw based on hardware node counts and daily peak workload hours relative to ERCOT Large Flexible Load guidelines.',
+        inputsHTML: `
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
+              <label class="block text-xs font-semibold uppercase tracking-wider text-[#00f0ff]" id="slider-1-label">Active Server Nodes</label>
+              <span id="input-val-1" class="text-sm font-mono font-bold">1,000 Nodes</span>
+            </div>
+            <input id="slider-1" type="range" min="100" max="10000" step="100" value="1000" class="w-full" oninput="onSliderChange()">
+            <p class="text-[10px] text-slate-500">The total number of high-density nodes actively drawing grid power.</p>
+          </div>
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
+              <label class="block text-xs font-semibold uppercase tracking-wider text-[#00f0ff]" id="slider-2-label">Peak Compute Hours / Day</label>
+              <span id="input-val-2" class="text-sm font-mono font-bold">12 Hours</span>
+            </div>
+            <input id="slider-2" type="range" min="1" max="24" step="1" value="12" class="w-full" oninput="onSliderChange()">
+            <p class="text-[10px] text-slate-500">Estimated duration the infrastructure runs at full workload capacity daily.</p>
+          </div>
+        `
+      },
+      water: {
+        id: 'water',
+        emoji: '🚰',
+        label: 'Water Utility details',
+        regRule: 'TCEQ Public Water EPP Compliance',
+        limit: 1500,
+        limitLabel: '1,500 HP',
+        metricUnit: 'HP',
+        costLabel: 'Filing Failure Liability Risk',
+        explainer: 'Calculated using standard TCEQ administrative daily penalty guides.',
+        context: 'Our assessment evaluates your pump-motor configurations to verify if capacity levels trigger TCEQ mandatory Emergency Preparedness rules.',
+        inputsHTML: `
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
+              <label class="block text-xs font-semibold uppercase tracking-wider text-[#00f0ff]" id="slider-1-label">Total Pump Motor Sizing</label>
+              <span id="input-val-1" class="text-sm font-mono font-bold">800 HP</span>
+            </div>
+            <input id="slider-1" type="range" min="100" max="4000" step="50" value="800" class="w-full" oninput="onSliderChange()">
+            <p class="text-[10px] text-slate-500">Combined horsepower rating of all physical facility distribution pumps.</p>
+          </div>
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
+              <label class="block text-xs font-semibold uppercase tracking-wider text-[#00f0ff]" id="slider-2-label">Required Backup Runtime</label>
+              <span id="input-val-2" class="text-sm font-mono font-bold">48 Hours</span>
+            </div>
+            <input id="slider-2" type="range" min="24" max="168" step="12" value="48" class="w-full" oninput="onSliderChange()">
+            <p class="text-[10px] text-slate-500">Minimum continuous operations required on-site during grid emergency events.</p>
+          </div>
+        `
+      },
+      care: {
+        id: 'care',
+        emoji: '🏥',
+        label: 'Senior Care Facility details',
+        regRule: 'Texas HHSC Ambient 88°F Rule',
+        limit: 120,
+        limitLabel: '120 Beds',
+        metricUnit: 'Beds',
+        costLabel: 'Administrative Safety Risk',
+        explainer: 'Projected risk liability of HHSC administrative penalties for non-compliance.',
+        context: 'We map your bed capacity metrics against your on-site generator capacity to verify compliance with HHSC temperature cooling regulations.',
+        inputsHTML: `
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
+              <label class="block text-xs font-semibold uppercase tracking-wider text-[#00f0ff]" id="slider-1-label">Licensed Beds Capacity</label>
+              <span id="input-val-1" class="text-sm font-mono font-bold">80 Beds</span>
+            </div>
+            <input id="slider-1" type="range" min="10" max="350" step="5" value="80" class="w-full" oninput="onSliderChange()">
+            <p class="text-[10px] text-slate-500">The total registered bed occupancy limit for your regional care facility.</p>
+          </div>
+          <div class="space-y-2">
+            <div class="flex justify-between items-center">
+              <label class="block text-xs font-semibold uppercase tracking-wider text-[#00f0ff]" id="slider-2-label">Existing Generator Power</label>
+              <span id="input-val-2" class="text-sm font-mono font-bold">150 kW</span>
+            </div>
+            <input id="slider-2" type="range" min="20" max="800" step="10" value="150" class="w-full" oninput="onSliderChange()">
+            <p class="text-[10px] text-slate-500">The rated output power of your current backup generation equipment.</p>
+          </div>
+        `
+      }
+    };
+
+    let currentIndustry = 'datacenter';
+    let animationTime = 0;
+
+    // US Telemetry Stats Tickers
+    let globalTokensTodayCount = 6428120000;
+    const tokensPerSecondMultiplier = 84225;
+
+    // Target active slider state trackers to feed "My Infra" telemetry
+    let activeCustomLoad = 1.2; 
+    let activeCustomWater = 1.5;
+    let activeCustomTokens = 36769;
+
+    // Elements Selectors
+    const canvasMain = document.getElementById('telemetry-canvas');
+    const ctxMain = canvasMain.getContext('2d');
+    const outputLoad = document.getElementById('output-load');
+    const outputLimit = document.getElementById('output-limit');
+    const outputRisk = document.getElementById('output-risk');
+    const compliancePill = document.getElementById('compliance-pill');
+    const complianceText = document.getElementById('compliance-text');
+    const costLeak = document.getElementById('cost-leak');
+    const financialMetricLabel = document.getElementById('financial-metric-label');
+    const financialExplainer = document.getElementById('financial-explainer');
+    const contextExplainer = document.getElementById('context-explainer');
+
+    // Mini-Canvas Contexts
+    const canvasTokens = document.getElementById('chart-tokens');
+    const canvasEnergy = document.getElementById('chart-energy');
+    const canvasWater = document.getElementById('chart-water');
+
+    // Startup Configuration
+    window.onload = function() {
+      switchIndustry('datacenter');
+      setupCanvases();
+      initTickers();
+      animateAll();
+    };
+
+    function setupCanvases() {
+      const rectMain = canvasMain.parentNode.getBoundingClientRect();
+      canvasMain.width = rectMain.width * window.devicePixelRatio;
+      canvasMain.height = rectMain.height * window.devicePixelRatio;
+      ctxMain.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+      [canvasTokens, canvasEnergy, canvasWater].forEach(cnv => {
+        const r = cnv.parentNode.getBoundingClientRect();
+        cnv.width = r.width * window.devicePixelRatio;
+        cnv.height = r.height * window.devicePixelRatio;
+        const ctx = cnv.getContext('2d');
+        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      });
+    }
+
+    window.addEventListener('resize', setupCanvases);
+
+    // Premium Theme Toggle Engine
+    function toggleTheme() {
+      isDarkMode = !isDarkMode;
+      
+      const body = document.body;
+      const moonIcon = document.getElementById('theme-moon');
+      const sunIcon = document.getElementById('theme-sun');
+      
+      // Update DOM layout structure elements classes
+      if (isDarkMode) {
+        body.classList.remove('theme-light');
+        body.classList.add('theme-dark');
+        moonIcon.classList.add('hidden');
+        sunIcon.classList.remove('hidden');
+        
+        // Re-inject dark mode configurations
+        updateThemeStylesForDOM('dark');
+      } else {
+        body.classList.remove('theme-dark');
+        body.classList.add('theme-light');
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+
+        // Re-inject light mode configurations
+        updateThemeStylesForDOM('light');
+      }
+      
+      // Redraw everything immediately to sync visual colors
+      calculate();
+    }
+
+    function updateThemeStylesForDOM(mode) {
+      const header = document.querySelector('header');
+      const footer = document.getElementById('site-footer');
+      const alertBanner = document.getElementById('tab-alert-banner');
+      const tabsContainer = document.getElementById('tabs-container');
+      const modelSelect = document.getElementById('monitor-model-select');
+      const explainerCard = document.getElementById('explainer-card');
+      const riskScorecard = document.getElementById('risk-scorecard');
+      const section3Container = document.getElementById('section3-container');
+      const section3StatsRow = document.getElementById('section3-stats-row');
+      const formContainer = document.getElementById('form-container');
+      const chartsRow = document.getElementById('charts-row');
+
+      if (mode === 'light') {
+        header.className = "border-b border-slate-200 bg-white/90 backdrop-blur-md sticky top-0 z-40 transition-colors";
+        footer.className = "border-t border-slate-200 bg-slate-50 py-6 text-center text-xs text-slate-500 transition-colors";
+        alertBanner.className = "bg-sky-50 border border-sky-100 rounded-lg p-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs leading-relaxed";
+        tabsContainer.className = "flex flex-wrap gap-1.5 p-1 rounded-lg w-full lg:w-auto transition-colors bg-slate-100 border border-slate-200";
+        modelSelect.className = "bg-white border border-slate-200 text-[11px] text-sky-600 rounded px-2.5 py-1.5 focus:outline-none focus:border-sky-500 w-full sm:w-auto font-mono";
+        explainerCard.className = "rounded-lg p-5 border text-xs leading-relaxed space-y-3 bg-slate-50 border-slate-200";
+        riskScorecard.className = "rounded-lg p-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-50 border border-slate-200";
+        section3Container.className = "rounded-xl p-6 border space-y-8 bg-white border-slate-200";
+        section3StatsRow.className = "flex flex-wrap gap-4 lg:gap-8 p-4 rounded-lg border w-full lg:w-auto bg-slate-50 border-slate-200";
+        formContainer.className = "bg-white rounded-lg p-6 border border-slate-200";
+        chartsRow.className = "grid grid-cols-1 md:grid-cols-3 gap-6 bg-slate-50 rounded-xl p-5 border transition-colors border-slate-200";
+
+        // Text override mappings for deep text in light mode
+        document.getElementById('brand-accent').className = "text-sky-600";
+        document.getElementById('header-subtitle').className = "text-[9px] text-slate-500 tracking-tight transition-colors";
+        document.getElementById('section1-header').className = "flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-200 pb-4";
+        document.getElementById('monitor-desc').className = "text-xs text-slate-500 mt-0.5";
+        document.getElementById('tab-banner-title').className = "font-bold text-slate-900 block text-sm";
+        document.getElementById('tab-banner-desc').className = "text-slate-500 text-[11px] block";
+        document.getElementById('section2-desc').className = "text-slate-500 text-xs max-w-2xl mx-auto";
+        document.getElementById('context-explainer').className = "text-slate-600";
+        document.getElementById('hud-metrics-row').className = "grid grid-cols-3 gap-4 mt-6 text-center border-t border-slate-200 pt-4";
+        document.getElementById('section3-header').className = "flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-6 border-b border-slate-200";
+        document.getElementById('booking-gradient-card').className = "rounded-xl p-8 border relative overflow-hidden transition-all bg-slate-50 border-slate-200";
+        document.getElementById('booking-paragraph').className = "text-sm text-slate-600 leading-relaxed max-w-lg";
+
+        // Hero titles
+        document.getElementById('hero-title').className = "header-font text-4xl sm:text-6xl font-extrabold tracking-tight leading-none text-slate-900 transition-colors";
+        document.getElementById('hero-accent').className = "text-sky-600";
+        document.getElementById('hero-subtitle-desc').className = "text-sm sm:text-lg max-w-2xl mx-auto text-slate-600 transition-colors";
+
+        // Replace high-contrast accent variables
+        updateDynamicTabColors('light');
+      } else {
+        header.className = "border-b border-slate-800/80 bg-slate-950/85 backdrop-blur-md sticky top-0 z-40 transition-colors";
+        footer.className = "border-t border-slate-900 bg-slate-950 py-6 text-center text-xs text-slate-500 transition-colors";
+        alertBanner.className = "bg-[#00f0ff]/5 border border-[#00f0ff]/20 rounded-lg p-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs leading-relaxed";
+        tabsContainer.className = "flex flex-wrap gap-1.5 p-1 rounded-lg w-full lg:w-auto transition-colors bg-slate-950 border border-slate-850";
+        modelSelect.className = "bg-slate-950 border border-slate-800 text-[11px] text-[#00f0ff] rounded px-2.5 py-1.5 focus:outline-none focus:border-[#00f0ff] w-full sm:w-auto font-mono";
+        explainerCard.className = "rounded-lg p-5 border text-xs leading-relaxed space-y-3 bg-slate-950 border-slate-800";
+        riskScorecard.className = "rounded-lg p-6 grid grid-cols-1 md:grid-cols-2 gap-6 bg-slate-950 border border-slate-850";
+        section3Container.className = "rounded-xl p-6 border space-y-8 bg-slate-900/60 border-slate-800";
+        section3StatsRow.className = "flex flex-wrap gap-4 lg:gap-8 p-4 rounded-lg border w-full lg:w-auto bg-slate-950/80 border-slate-800/80";
+        formContainer.className = "bg-slate-950/80 rounded-lg p-6 border border-slate-800";
+        chartsRow.className = "grid grid-cols-1 md:grid-cols-3 gap-6 bg-slate-900/20 rounded-xl p-5 border transition-colors border-slate-800";
+
+        // Text overrides to bright colors
+        document.getElementById('brand-accent').className = "text-[#00f0ff]";
+        document.getElementById('header-subtitle').className = "text-[9px] text-slate-500 tracking-tight transition-colors";
+        document.getElementById('section1-header').className = "flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 border-b border-slate-800 pb-4";
+        document.getElementById('monitor-desc').className = "text-xs text-slate-400 mt-0.5";
+        document.getElementById('tab-banner-title').className = "font-bold text-white block text-sm";
+        document.getElementById('tab-banner-desc').className = "text-slate-400 text-[11px] block";
+        document.getElementById('section2-desc').className = "text-slate-400 text-xs max-w-2xl mx-auto";
+        document.getElementById('context-explainer').className = "text-slate-400";
+        document.getElementById('hud-metrics-row').className = "grid grid-cols-3 gap-4 mt-6 text-center border-t border-slate-800 pt-4";
+        document.getElementById('section3-header').className = "flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-6 border-b border-slate-800";
+        document.getElementById('booking-gradient-card').className = "bg-gradient-to-r from-slate-900 to-slate-950 rounded-xl p-8 border relative overflow-hidden transition-all border-[#00f0ff]/30";
+        document.getElementById('booking-paragraph').className = "text-sm text-slate-400 leading-relaxed max-w-lg";
+
+        // Hero titles
+        document.getElementById('hero-title').className = "header-font text-4xl sm:text-6xl font-extrabold tracking-tight leading-none text-white transition-colors";
+        document.getElementById('hero-accent').className = "text-[#00f0ff]";
+        document.getElementById('hero-subtitle-desc').className = "text-sm sm:text-lg max-w-2xl mx-auto text-slate-400 transition-colors";
+
+        updateDynamicTabColors('dark');
+      }
+    }
+
+    function updateDynamicTabColors(mode) {
+      const keys = ['compliance', 'us', 'texas', 'my'];
+      keys.forEach(key => {
+        const btn = document.getElementById('tab-' + key);
+        if (key === currentActiveTab) {
+          if (mode === 'light') {
+            btn.className = "flex-1 lg:flex-none px-4 py-2 rounded text-xs font-bold bg-white text-sky-600 shadow-sm border border-slate-200 transition-all flex items-center justify-center space-x-1.5";
+          } else {
+            btn.className = "flex-1 lg:flex-none px-4 py-2 rounded text-xs font-semibold bg-slate-800 text-[#00f0ff] border border-[#00f0ff]/20 transition-all flex items-center justify-center space-x-1.5";
+          }
+        } else {
+          if (mode === 'light') {
+            btn.className = "flex-1 lg:flex-none px-4 py-2 rounded text-xs font-semibold text-slate-600 hover:text-slate-950 hover:bg-slate-50 transition-all flex items-center justify-center space-x-1.5";
+          } else {
+            btn.className = "flex-1 lg:flex-none px-4 py-2 rounded text-xs font-semibold text-slate-400 hover:text-white transition-all flex items-center justify-center space-x-1.5";
+          }
+        }
+      });
+    }
+
+    // Switch Model Profile via dropdown selection
+    function changeMonitorModel(val) {
+      selectedModelKey = val;
+    }
+
+    // Interactive Telemetry Mode Tab Switching
+    function switchTelemetryTab(tabKey) {
+      currentActiveTab = tabKey;
+      
+      const bannerIcon = document.getElementById('tab-banner-icon');
+      const bannerTitle = document.getElementById('tab-banner-title');
+      const bannerDesc = document.getElementById('tab-banner-desc');
+      const labels = {
+        tokens: document.getElementById('chart-tokens-label'),
+        energy: document.getElementById('chart-energy-label'),
+        water: document.getElementById('chart-water-label')
+      };
+
+      // Set styles on the navigation tab pills (Dynamically adapted by mode)
+      updateDynamicTabColors(isDarkMode ? 'dark' : 'light');
+
+      // Update banner messages and label sub-indicators based on selection
+      if (tabKey === 'compliance') {
+        bannerIcon.innerText = '🚨';
+        bannerTitle.innerText = 'Active Regulatory Stress Model';
+        bannerDesc.innerHTML = `We translate cumulative model-inference cycles directly into physical water cooling drain and electric grid dependencies. <strong>Below:</strong> Switch industry inputs to simulate your regional risk headroom.`;
+        labels.tokens.innerText = 'tokens | ceiling';
+        labels.energy.innerText = 'load | ceiling';
+        labels.water.innerText = 'gph | ceiling';
+      } else if (tabKey === 'us') {
+        bannerIcon.innerText = '🇺🇸';
+        bannerTitle.innerText = 'US National Grid Footprint Telemetry';
+        bannerDesc.innerText = 'Mapping average computing resource draw values calculated across PJM (Virginia), CAISO (California), and BPA (Pacific Northwest).';
+        labels.tokens.innerText = 'us | natl avg';
+        labels.energy.innerText = 'mwh | natl avg';
+        labels.water.innerText = 'gph | natl avg';
+      } else if (tabKey === 'texas') {
+        bannerIcon.innerText = '🌵';
+        bannerTitle.innerText = 'Texas ERCOT Grid Stress Telemetry';
+        bannerDesc.innerText = 'Focused tracking on localized ERCOT interconnections. Isolating wind power margins and high water-evaporation cooling penalties.';
+        labels.tokens.innerText = 'tx | regional';
+        labels.energy.innerText = 'mwh | regional';
+        labels.water.innerText = 'gph | regional';
+      } else if (tabKey === 'my') {
+        bannerIcon.innerText = '⚡';
+        bannerTitle.innerText = 'Private Sandbox Simulation';
+        bannerDesc.innerText = 'Tracking custom metrics generated live from your inputs. Adjust the sliders in the compliance panel below to see your custom telemetry wave.';
+        labels.tokens.innerText = 'my | private';
+        labels.energy.innerText = 'my | private';
+        labels.water.innerText = 'my | private';
+      }
+    }
+
+    // Counters Loop Updates
+    function initTickers() {
+      setInterval(() => {
+        const metrics = modelInferenceSpeeds[selectedModelKey];
+        
+        tokensCount += Math.floor(metrics.tokenInc * (0.8 + Math.random() * 0.4));
+        energyCount += parseFloat((metrics.energyFactor * (0.9 + Math.random() * 0.2)).toFixed(4));
+        waterCount += parseFloat((metrics.waterFactor * (0.9 + Math.random() * 0.2)).toFixed(4));
+
+        document.getElementById('counter-tokens').innerText = tokensCount.toLocaleString('en-US');
+        document.getElementById('counter-energy').innerText = energyCount.toFixed(2);
+        document.getElementById('counter-water').innerText = waterCount.toFixed(2);
+
+        // Update active history lists depending on selected view configuration
+        let displayTokens = tokensCount;
+        let displayEnergy = energyCount;
+        let displayWater = waterCount;
+
+        if (currentActiveTab === 'us') {
+          displayTokens = Math.round(tokensCount * 1.8);
+          displayEnergy = parseFloat((energyCount * 1.6).toFixed(2));
+          displayWater = parseFloat((waterCount * 1.2).toFixed(2));
+        } else if (currentActiveTab === 'texas') {
+          displayTokens = Math.round(tokensCount * 0.4);
+          displayEnergy = parseFloat((energyCount * 1.35).toFixed(2));
+          displayWater = parseFloat((waterCount * 1.75).toFixed(2));
+        } else if (currentActiveTab === 'my' || currentActiveTab === 'compliance') {
+          displayTokens = activeCustomTokens;
+          displayEnergy = parseFloat((activeCustomLoad * 4.2).toFixed(2));
+          displayWater = parseFloat((activeCustomWater * 3.6).toFixed(2));
         }
 
-        const charts = {
-            tokens: createChart('tokenChart', 'Tokens', '#22d3ee'),
-            energy: createChart('energyChart', 'kWh', '#60a5fa'),
-            water: createChart('waterChart', 'Gallons', '#34d399')
+        historyTokens.push(displayTokens);
+        if (historyTokens.length > MAX_POINTS) historyTokens.shift();
+
+        historyEnergy.push(displayEnergy);
+        if (historyEnergy.length > MAX_POINTS) historyEnergy.shift();
+
+        historyWater.push(displayWater);
+        if (historyWater.length > MAX_POINTS) historyWater.shift();
+
+        // High fidelity headroom readout formatting
+        if (currentActiveTab === 'compliance') {
+          const limit = INDUSTRIES[currentIndustry].limit;
+          const currentLoad = activeCustomLoad;
+          
+          if (currentLoad > limit) {
+            const overage = (currentLoad - limit).toFixed(1);
+            document.getElementById('chart-tokens-val').innerHTML = `<span class="text-red-500 font-bold">⚠️ OVER LIMIT</span>`;
+            document.getElementById('chart-energy-val').innerHTML = `<span class="text-red-500 font-bold">🚨 -${overage} ${INDUSTRIES[currentIndustry].metricUnit}</span>`;
+            document.getElementById('chart-water-val').innerHTML = `<span class="text-red-500 font-bold">🚨 Risk Alert</span>`;
+          } else {
+            const headroom = (limit - currentLoad).toFixed(1);
+            document.getElementById('chart-tokens-val').innerHTML = `<span class="text-emerald-500 font-semibold">+Safe</span>`;
+            document.getElementById('chart-energy-val').innerHTML = `<span class="text-emerald-500 font-semibold">+${headroom} ${INDUSTRIES[currentIndustry].metricUnit} Free</span>`;
+            document.getElementById('chart-water-val').innerHTML = `<span class="text-emerald-500 font-semibold">Normal</span>`;
+          }
+        } else {
+          document.getElementById('chart-tokens-val').innerText = displayTokens.toLocaleString();
+          document.getElementById('chart-energy-val').innerText = displayEnergy.toFixed(2) + (currentActiveTab === 'my' ? ' kW' : ' MWh');
+          document.getElementById('chart-water-val').innerText = displayWater.toFixed(2) + ' GPH';
+        }
+
+      }, 100);
+
+      // Us Grid Telemetry Ticker (Section 3)
+      setInterval(() => {
+        const inc = Math.floor(tokensPerSecondMultiplier * (0.85 + Math.random() * 0.3));
+        globalTokensTodayCount += inc;
+
+        const rawMwh = (globalTokensTodayCount / 1000000000) * 2.93;
+        const rawWaterGallons = (globalTokensTodayCount / 1000000000) * 2000;
+
+        document.getElementById('live-global-tokens').innerText = globalTokensTodayCount.toLocaleString('en-US');
+        document.getElementById('live-global-mwh').innerText = rawMwh.toLocaleString('en-US', { maximumFractionDigits: 2 });
+        document.getElementById('live-global-water').innerText = Math.round(rawWaterGallons).toLocaleString('en-US') + ' Gal';
+      }, 1000);
+    }
+
+    // Switch Compliance Target (Section 2)
+    function switchIndustry(industryKey) {
+      currentIndustry = industryKey;
+      const data = INDUSTRIES[industryKey];
+
+      ['datacenter', 'water', 'care'].forEach(key => {
+        const btn = document.getElementById('btn-' + key);
+        if (key === industryKey) {
+          btn.className = "py-4 px-4 rounded-lg font-bold text-sm transition flex flex-col items-center justify-center space-y-2 bg-slate-900 border-2 border-[#00f0ff]";
+        } else {
+          btn.className = "py-4 px-4 rounded-lg text-slate-400 font-bold text-sm transition flex flex-col items-center justify-center space-y-2 bg-slate-950 border border-slate-800";
+        }
+      });
+
+      document.getElementById('industry-emoji').innerText = data.emoji;
+      document.getElementById('industry-label').innerText = data.label;
+      contextExplainer.innerText = data.context;
+      financialMetricLabel.innerText = data.costLabel;
+      financialExplainer.innerText = data.explainer;
+
+      document.getElementById('calculator-inputs').innerHTML = data.inputsHTML;
+
+      calculate();
+    }
+
+    // Triggered whenever sliders are changed
+    function onSliderChange() {
+      if (currentActiveTab !== 'my' && currentActiveTab !== 'compliance') {
+        switchTelemetryTab('my');
+      }
+      calculate();
+    }
+
+    function calculate() {
+      const data = INDUSTRIES[currentIndustry];
+      const slider1 = document.getElementById('slider-1');
+      const slider2 = document.getElementById('slider-2');
+      
+      const val1 = parseInt(slider1.value);
+      const val2 = parseInt(slider2.value);
+
+      const disp1 = document.getElementById('input-val-1');
+      const disp2 = document.getElementById('input-val-2');
+
+      let currentDraw = 0;
+      let limitValue = data.limit;
+
+      if (currentIndustry === 'datacenter') {
+        disp1.innerText = val1.toLocaleString() + ' Nodes';
+        disp2.innerText = val2 + ' Hours';
+
+        currentDraw = (val1 * 0.0012) * (val2 / 12);
+        currentDraw = parseFloat(currentDraw.toFixed(2));
+
+        outputLoad.innerText = currentDraw + ' ' + data.metricUnit;
+        outputLimit.innerText = limitValue + ' ' + data.metricUnit;
+
+        activeCustomLoad = currentDraw;
+        activeCustomWater = currentDraw * 1.5;
+        activeCustomTokens = Math.round(val1 * 45 * val2);
+
+        const penaltyValue = Math.max(0, (currentDraw - limitValue) * 38500);
+
+        if (currentDraw > limitValue) {
+          setComplianceStatus('🚨 CRITICAL OVER-LOAD', 'bg-red-500/10 text-red-500 border border-red-500/20', 
+            `Your peak draw exceeds the legal 10 MW ERCOT Large Flexible Load threshold. Compliance filing required.`, 
+            penaltyValue);
+          outputRisk.innerText = 'HIGH';
+          outputRisk.className = 'block text-lg font-mono font-bold text-red-500 mt-1';
+        } else if (currentDraw > limitValue * 0.7) {
+          setComplianceStatus('⚠️ ALERT RISK THRESHOLD', 'bg-amber-500/10 text-amber-400 border border-amber-500/20', 
+            `System draw is approaching ERCOT registration boundaries. Pre-emptive auditing recommended.`, 
+            penaltyValue + 4500);
+          outputRisk.innerText = 'MED';
+          outputRisk.className = 'block text-lg font-mono font-bold text-amber-500 mt-1';
+        } else {
+          setComplianceStatus('✅ COMPLIANT ZONE', 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20', 
+            `Infrastructure compute capacity draw remains safely below state regulatory registration levels.`, 
+            0);
+          outputRisk.innerText = 'LOW';
+          outputRisk.className = 'block text-lg font-mono font-bold text-emerald-400 mt-1';
+        }
+
+      } else if (currentIndustry === 'water') {
+        disp1.innerText = val1.toLocaleString() + ' HP';
+        disp2.innerText = val2 + ' Hours';
+
+        currentDraw = val1;
+
+        outputLoad.innerText = val1.toLocaleString() + ' ' + data.metricUnit;
+        outputLimit.innerText = limitValue.toLocaleString() + ' ' + data.metricUnit;
+
+        activeCustomLoad = parseFloat((val1 / 200).toFixed(2));
+        activeCustomWater = parseFloat((val1 * (val2 / 24)).toFixed(1));
+        activeCustomTokens = Math.round(val1 * 120);
+
+        const penaltyValue = Math.max(0, (val1 - limitValue) * 12);
+
+        if (val1 > limitValue) {
+          setComplianceStatus('🚨 EMERGENCY OUTLINE REQUIRED', 'bg-red-500/10 text-red-500 border border-red-500/20', 
+            `TCEQ guidelines dictate water systems with motor capacities exceeding 1,500 HP must file active EPP metrics.`, 
+            penaltyValue * 150);
+          outputRisk.innerText = 'HIGH';
+          outputRisk.className = 'block text-lg font-mono font-bold text-red-500 mt-1';
+        } else {
+          setComplianceStatus('✅ STANDARD OPERATIONS', 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20', 
+            `Combined pump capacity remains below the threshold for mandatory TCEQ emergency backup reporting.`, 
+            0);
+          outputRisk.innerText = 'LOW';
+          outputRisk.className = 'block text-lg font-mono font-bold text-emerald-400 mt-1';
+        }
+
+      } else if (currentIndustry === 'care') {
+        disp1.innerText = val1 + ' Beds';
+        disp2.innerText = val2 + ' kW';
+
+        const requiredSizing = val1 * 1.8;
+        currentDraw = val1;
+
+        outputLoad.innerText = val1 + ' ' + data.metricUnit;
+        outputLimit.innerText = limitValue + ' ' + data.metricUnit;
+
+        activeCustomLoad = parseFloat((val2 / 10).toFixed(2));
+        activeCustomWater = parseFloat((val1 * 0.8).toFixed(1));
+        activeCustomTokens = Math.round(val1 * 1800);
+
+        if (val2 < requiredSizing) {
+          const gap = requiredSizing - val2;
+          const riskLiability = gap * 110;
+
+          setComplianceStatus('🚨 INSUFFICIENT GENERATION CAPACITY', 'bg-red-500/10 text-red-500 border border-red-500/20', 
+            `On-site backup generator output power is too low to maintain HHSC Ambient 88°F guidelines for ${val1} beds.`, 
+            riskLiability);
+          outputRisk.innerText = 'HIGH';
+          outputRisk.className = 'block text-lg font-mono font-bold text-red-500 mt-1';
+        } else {
+          setComplianceStatus('✅ RESILIENT OPERATIONS', 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20', 
+            `Emergency backup generator reserves satisfy HHSC resident safety cooling regulations.`, 
+            0);
+          outputRisk.innerText = 'LOW';
+          outputRisk.className = 'block text-lg font-mono font-bold text-emerald-400 mt-1';
+        }
+      }
+    }
+
+    function setComplianceStatus(pillText, pillClass, descText, annualCost) {
+      compliancePill.className = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold " + pillClass;
+      compliancePill.innerText = pillText;
+      complianceText.innerText = descText;
+      costLeak.innerText = '$' + annualCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    // Lead Form
+    document.getElementById('audit-lead-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      document.getElementById('success-modal').classList.remove('hidden');
+    });
+
+    function closeModal() {
+      document.getElementById('success-modal').classList.add('hidden');
+      document.getElementById('audit-lead-form').reset();
+    }
+
+    // High Fidelity Render Loops
+    function animateAll() {
+      let thresholdObj = null;
+      if (currentActiveTab === 'compliance') {
+        const ind = INDUSTRIES[currentIndustry];
+        thresholdObj = {
+          limit: ind.limit,
+          isViolating: activeCustomLoad > ind.limit,
+          limitYRatio: 0.45 
         };
+      }
 
-        setInterval(() => {
-            const rate = rates[currentModel];
-            const multiplier = 1 + (Math.random() * 0.15); 
-            stats.tokens += Math.floor(rate.tokens * multiplier);
-            stats.energy += (rate.energy * multiplier);
-            stats.water += (rate.water * multiplier);
+      // Dynamic rendering of the three side-by-side charts (Adaptive color structures)
+      const primaryLineColor = isDarkMode ? '#00f0ff' : '#0284c7';
+      const primaryGradientFill = isDarkMode ? 'rgba(0, 240, 255, 0.08)' : 'rgba(2, 132, 199, 0.08)';
 
-            document.getElementById('tokenCount').innerText = stats.tokens.toLocaleString();
-            document.getElementById('energyCount').innerText = stats.energy.toFixed(2);
-            document.getElementById('waterCount').innerText = stats.water.toFixed(2);
+      renderMiniChart(canvasTokens, historyTokens, primaryLineColor, primaryGradientFill, thresholdObj);
+      renderMiniChart(canvasEnergy, historyEnergy, '#3b82f6', 'rgba(59, 130, 246, 0.08)', thresholdObj);
+      renderMiniChart(canvasWater, historyWater, '#10b981', 'rgba(16, 185, 129, 0.08)', thresholdObj);
+      
+      renderMainHUD();
 
-            Object.keys(charts).forEach(key => {
-                charts[key].data.datasets[0].data.shift();
-                charts[key].data.datasets[0].data.push(stats[key]);
-                charts[key].update();
-            });
-        }, 1000);
-    </script>
+      animationTime += 0.04;
+      requestAnimationFrame(animateAll);
+    }
+
+    // Mini Chart drawing logic (Adapt grid lines and texts to dark/light color metrics)
+    function renderMiniChart(cnv, history, strokeColor, fillGradient, threshold) {
+      const ctx = cnv.getContext('2d');
+      const rect = cnv.parentNode.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      // Adaptive grid line colors
+      ctx.strokeStyle = isDarkMode ? 'rgba(255, 255, 255, 0.03)' : 'rgba(15, 23, 42, 0.03)';
+      ctx.lineWidth = 1;
+      for (let x = 0; x < w; x += 30) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+      }
+      for (let y = 0; y < h; y += 25) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+      }
+
+      const minVal = Math.min(...history) * 0.99;
+      const maxVal = Math.max(...history) * 1.01;
+      const range = maxVal - minVal || 1;
+
+      // Draw horizontal red regulatory dotted boundary line
+      if (threshold) {
+        const lineY = h * threshold.limitYRatio;
+        ctx.beginPath();
+        ctx.strokeStyle = 'rgba(239, 68, 68, 0.5)';
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([4, 4]);
+        ctx.moveTo(0, lineY);
+        ctx.lineTo(w, lineY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // Render Telemetry curve
+      ctx.beginPath();
+      const activeStroke = (threshold && threshold.isViolating) ? '#ef4444' : strokeColor;
+      const activeFill = (threshold && threshold.isViolating) ? 'rgba(239, 68, 68, 0.08)' : fillGradient;
+
+      ctx.strokeStyle = activeStroke;
+      ctx.lineWidth = 2;
+      ctx.shadowBlur = isDarkMode ? 4 : 0;
+      ctx.shadowColor = activeStroke;
+
+      const coordinates = [];
+
+      for (let i = 0; i < history.length; i++) {
+        const x = (i / (MAX_POINTS - 1)) * (w - 20) + 10;
+        const normY = (history[i] - minVal) / range;
+        const y = h - (normY * (h - 30) + 15);
+        coordinates.push({ x, y });
+
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+
+      // Under-Curve Area Gradient Fill
+      if (coordinates.length > 1) {
+        ctx.beginPath();
+        ctx.lineTo(coordinates[coordinates.length - 1].x, h);
+        ctx.lineTo(coordinates[0].x, h);
+        ctx.closePath();
+        
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, activeFill);
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.fill();
+      }
+
+      // Draw node connection dots
+      coordinates.forEach((pt) => {
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 3, 0, 2 * Math.PI);
+        ctx.fillStyle = activeStroke;
+        ctx.fill();
+      });
+    }
+
+    // Main Compliance HUD Canvas Render Engine
+    function renderMainHUD() {
+      const rect = canvasMain.parentNode.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
+
+      ctxMain.clearRect(0, 0, w, h);
+
+      // Adaptive main grid system
+      ctxMain.strokeStyle = isDarkMode ? 'rgba(0, 240, 255, 0.04)' : 'rgba(15, 23, 42, 0.04)';
+      ctxMain.lineWidth = 1;
+      for (let x = 0; x < w; x += 40) {
+        ctxMain.beginPath(); ctxMain.moveTo(x, 0); ctxMain.lineTo(x, h); ctxMain.stroke();
+      }
+      for (let y = 0; y < h; y += 30) {
+        ctxMain.beginPath(); ctxMain.moveTo(0, y); ctxMain.lineTo(w, y); ctxMain.stroke();
+      }
+
+      const data = INDUSTRIES[currentIndustry];
+      const slider1 = document.getElementById('slider-1');
+      const val1 = slider1 ? parseInt(slider1.value) : 1;
+      const limitVal = data.limit;
+
+      let isViolating = false;
+      let ratioVal = val1 / limitVal;
+
+      if (currentIndustry === 'datacenter') {
+        const slider2 = document.getElementById('slider-2');
+        const val2 = slider2 ? parseInt(slider2.value) : 1;
+        const currentDraw = (val1 * 0.0012) * (val2 / 12);
+        isViolating = currentDraw > limitVal;
+        ratioVal = currentDraw / limitVal;
+      } else if (currentIndustry === 'water') {
+        isViolating = val1 > limitVal;
+      } else if (currentIndustry === 'care') {
+        const slider2 = document.getElementById('slider-2');
+        const val2 = slider2 ? parseInt(slider2.value) : 1;
+        const requiredSizing = val1 * 1.8;
+        isViolating = val2 < requiredSizing;
+        ratioVal = requiredSizing / val2;
+      }
+
+      // Align colors with core active themes
+      const defaultDrawColor = isDarkMode ? '#00f0ff' : '#0284c7';
+      const activeColor = isViolating ? '#ef4444' : defaultDrawColor;
+      const glowValue = isViolating ? 'rgba(239, 68, 68, 0.8)' : 'rgba(0, 240, 255, 0.8)';
+
+      // Draw State Limit Boundary Line
+      const limitY = h * 0.45;
+      ctxMain.beginPath();
+      ctxMain.strokeStyle = '#ef4444';
+      ctxMain.lineWidth = 1.5;
+      ctxMain.setLineDash([6, 6]);
+      ctxMain.moveTo(0, limitY);
+      ctxMain.lineTo(w, limitY);
+      ctxMain.stroke();
+      ctxMain.setLineDash([]); // Reset line dash
+
+      ctxMain.fillStyle = '#ef4444';
+      ctxMain.font = '10px monospace';
+      ctxMain.fillText('🚨 REGULATORY THRESHOLD (' + data.limitLabel + ')', w - 195, limitY - 8);
+
+      // Draw Telemetry Wave Curve
+      ctxMain.beginPath();
+      ctxMain.strokeStyle = activeColor;
+      ctxMain.lineWidth = 2.5;
+      ctxMain.shadowBlur = isDarkMode ? 8 : 0;
+      ctxMain.shadowColor = glowValue;
+
+      const baselineY = limitY + ((ratioVal - 1) * -45); 
+      const constrainedY = Math.max(30, Math.min(h - 30, baselineY));
+
+      const amplitude = Math.max(5, Math.min(35, ratioVal * 12));
+      const frequency = 0.02;
+
+      for (let x = 0; x < w; x++) {
+        const y = constrainedY + Math.sin(x * frequency + animationTime) * amplitude;
+        if (x === 0) {
+          ctxMain.moveTo(x, y);
+        } else {
+          ctxMain.lineTo(x, y);
+        }
+      }
+      ctxMain.stroke();
+
+      ctxMain.shadowBlur = 0; // Clear shadow
+
+      // Overlay status logs
+      ctxMain.fillStyle = isDarkMode ? activeColor : '#0f172a';
+      ctxMain.font = '10px monospace';
+      ctxMain.fillText('FACILITY_GRID_STATE: ' + (isViolating ? 'WARNING_OVER_LIMIT' : 'SECURE_NOMINAL'), 20, 25);
+      ctxMain.fillText('CALCULATOR_MODE: ' + currentIndustry.toUpperCase() + '_INDEX_V2', 20, 40);
+    }
+  </script>
 </body>
 </html>
