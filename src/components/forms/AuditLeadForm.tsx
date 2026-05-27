@@ -35,12 +35,11 @@ export function AuditLeadForm() {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const type = params.get("type");
-      if (type === "audit") {
-        setActiveTab("audit");
-      } else if (type === "enterprise") {
-        setActiveTab("enterprise");
-      } else if (type === "demo") {
-        setActiveTab("demo");
+      if (type === "audit" || type === "enterprise" || type === "demo") {
+        const timer = setTimeout(() => {
+          setActiveTab(type as TabMode);
+        }, 0);
+        return () => clearTimeout(timer);
       }
     }
   }, []);

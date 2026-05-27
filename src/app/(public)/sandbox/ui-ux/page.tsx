@@ -76,12 +76,17 @@ export default function SandboxIndex() {
   const [simulatedLoad, setSimulatedLoad] = useState(100);
 
   useEffect(() => {
-    setBrowserTime(new Date().toLocaleTimeString());
+    const timer = setTimeout(() => {
+      setBrowserTime(new Date().toLocaleTimeString());
+    }, 0);
     const interval = setInterval(() => {
       setBrowserTime(new Date().toLocaleTimeString());
       setSimulatedLoad(Math.floor(Math.random() * 20) + 5);
     }, 1000);
-    return () => clearInterval(interval);
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
   }, []);
 
   return (

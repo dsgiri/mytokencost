@@ -169,6 +169,7 @@ export default function HardwareStorefront() {
   const [leadModels, setLeadModels] = useState<string[]>([]);
   const [leadMessage, setLeadMessage] = useState("");
   const [leadSubmitted, setLeadSubmitted] = useState(false);
+  const [leadTicketNumber, setLeadTicketNumber] = useState<number | null>(null);
 
   // Reservation Modal State
   const [checkoutModalOpen, setCheckoutModalOpen] = useState(false);
@@ -1112,7 +1113,7 @@ export default function HardwareStorefront() {
                 <CheckCircle className="w-12 h-12 text-emerald-400 mx-auto" />
                 <h4 className="text-base font-bold font-space-grotesk text-white">Consultation Scope Lodged Successfully!</h4>
                 <p className="text-xs text-slate-400 font-mono max-w-md mx-auto leading-relaxed">
-                  Thanks <strong>{leadName}</strong>. We have logged your request under ticket <strong className="text-cyan-400">#MTK-INQUIRY-{Math.floor(Math.random()*9000)+1000}</strong>. We will review your target models ({leadModels.join(", ") || "Custom"}) and contact you at <strong className="text-white">{leadEmail}</strong> within 12 hours.
+                  Thanks <strong>{leadName}</strong>. We have logged your request under ticket <strong className="text-cyan-400">#MTK-INQUIRY-{leadTicketNumber || 1000}</strong>. We will review your target models ({leadModels.join(", ") || "Custom"}) and contact you at <strong className="text-white">{leadEmail}</strong> within 12 hours.
                 </p>
                 <button
                   onClick={() => {
@@ -1121,6 +1122,7 @@ export default function HardwareStorefront() {
                     setLeadEmail("");
                     setLeadModels([]);
                     setLeadMessage("");
+                    setLeadTicketNumber(null);
                   }}
                   className="bg-slate-800 hover:bg-slate-700 text-white text-[10px] font-mono px-4 py-2 rounded-lg transition"
                 >
@@ -1131,7 +1133,10 @@ export default function HardwareStorefront() {
               <form 
                 onSubmit={(e) => {
                   e.preventDefault();
-                  if (leadName && leadEmail) setLeadSubmitted(true);
+                  if (leadName && leadEmail) {
+                    setLeadTicketNumber(Math.floor(Math.random() * 9000) + 1000);
+                    setLeadSubmitted(true);
+                  }
                 }} 
                 className="space-y-6"
               >
