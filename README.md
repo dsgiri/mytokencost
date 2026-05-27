@@ -1,32 +1,36 @@
-MyTokenCost.com
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-MyTokenCost is a real-time monitoring and audit tool designed to visualize the true physical footprint of AI infrastructure. As AI adoption scales, the hidden costs—specifically in energy consumption and water cooling—become critical metrics for operational compliance and sustainability.
+## Getting Started
 
-Purpose
-This project provides a live, transparent dashboard that calculates:
+First, run the development server:
 
-Token Consumption: Tracking total model interactions.
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-Energy Demand: Estimating electricity usage based on current workloads.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Water Footprint: Calculating the water usage required for data center cooling.
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-Why It Matters
-Transparency is the foundation of accountability. By providing a clear view of infrastructure costs, MyTokenCost helps developers, businesses, and public systems make informed decisions about their AI utilization and environmental impact.
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-Features
-Real-time Analytics: Live dashboard with high-contrast visuals for tracking infrastructure strain.
+## Learn More
 
-Model Comparison: Switch between different AI models to understand their relative resource costs.
+To learn more about Next.js, take a look at the following resources:
 
-Compliance-Ready: Designed to support audit-ready reporting for organizations adhering to sustainability mandates.
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-Status
-Currently under active development. We are building the foundational blueprints for industrial-grade AI monitoring.
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-Feedback & Collaboration
-This project is part of a broader effort to improve transparency in industrial automation. If you have suggestions or want to contribute to our sustainability blueprints, please feel free to:
+## Deploy on Vercel
 
-Contact us: remindtag@gmail.com
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Contribute: Open an issue or pull request if you are interested in expanding our monitoring capabilities.
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

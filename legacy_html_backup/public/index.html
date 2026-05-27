@@ -710,6 +710,9 @@
     </div>
   </div>
 
+  <!-- SUPABASE SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <!-- SCRIPT ENGINE -->
   <script>
     // Live Tickers & Real-time Charts State (Section 1)
@@ -1302,10 +1305,47 @@
       costLeak.innerText = '$' + annualCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
+    // Supabase Configuration
+    // TODO: Replace with your actual project URL and anon key from SUPABASE_SETUP.md
+    const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+    let supabaseClient = null;
+    
+    if (window.supabase && SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+
     // Lead Form
-    document.getElementById('audit-lead-form').addEventListener('submit', function(e) {
+    document.getElementById('audit-lead-form').addEventListener('submit', async function(e) {
       e.preventDefault();
-      document.getElementById('success-modal').classList.remove('hidden');
+
+      const btn = document.getElementById('submit-btn');
+      const originalText = btn.innerText;
+      btn.innerText = 'PROCESSING REQUEST...';
+      btn.disabled = true;
+
+      const name = document.getElementById('lead-name').value;
+      const email = document.getElementById('lead-email').value;
+      const location = document.getElementById('lead-location').value;
+
+      try {
+        if (supabaseClient) {
+          const { error } = await supabaseClient.from('leads').insert([
+            { name, email, location }
+          ]);
+          if (error) throw error;
+        } else {
+          console.warn("Supabase not configured. Using mock submission.");
+          await new Promise(r => setTimeout(r, 800));
+        }
+
+        document.getElementById('success-modal').classList.remove('hidden');
+      } catch (err) {
+        alert("Error submitting request: " + err.message);
+      } finally {
+        btn.innerText = originalText;
+        btn.disabled = false;
+      }
     });
 
     function closeModal() {

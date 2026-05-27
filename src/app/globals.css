@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/* Configure Tailwind v4 selector-based dark mode (.dark class toggled by next-themes on html) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-white font-sans antialiased transition-colors duration-300;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #020617; 
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b; 
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155; 
+}

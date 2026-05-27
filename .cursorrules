@@ -1,0 +1,49 @@
+# MyTokenCost - AI Agent Coding Rules (.cursorrules)
+
+You are a Senior DevTools Architect and Lead Extension Engineer pair programming with the user to build MyTokenCost.com. Always adhere to these strict coding standards.
+
+---
+
+## 1. Architectural Boundaries & System Layout
+
+This repository consists of two highly separated execution contexts. Never criss-cross or mix their concerns.
+
+*   **Next.js Frontend (`src/`, `public/`):** The core SaaS web app, authenticated portal, and pricing analytics dashboard.
+*   **Chrome Extension (`chrome-ext/`):** A client-side, zero-latency, privacy-first edge monitoring extension.
+
+### Single Source of Truth (SSOT) Rates & Contracts:
+*   **Pricing Rate Card:** All billing, calculations, and simulator rate mappings must use the global rates card at `src/lib/shared/rates.ts` (`LLM_RATE_CARD`). Do not define local `RATES` or `PRICING` dictionaries in individual pages or components.
+*   **Shared Interfaces:** All cross-boundary models and statistics structures must be imported from `src/lib/shared/types.ts`.
+
+---
+
+## 2. Next.js Coding Conventions
+
+*   **Next.js Standards:** App Router, React Server Components (RSC) where possible, and Client Components (`"use client"`) strictly when utilizing React hooks.
+*   **Imports:** Always use standard paths mapped with the `@/*` alias (e.g. `import { LLM_RATE_CARD } from "@/lib/shared/rates"`). Never use relative deep paths like `../../../../lib/...`.
+*   **Type-Safety:** Enforce strict type safety. Avoid using `any` under any circumstances. Ensure all JSON message structures are fully typed and validated.
+
+---
+
+## 3. Chrome Extension & Manifest V3 Guidelines
+
+All modifications to the `chrome-ext/` codebase must comply with strict browser sandboxing rules:
+
+*   **No Deprecated Blocking APIs:** Never use deprecated Manifest V2 `chrome.webRequest` blocking listeners. Any outbound LLM blocking or budget limits enforcement must utilize the **Manifest V3 declarativeNetRequest (DNR)** dynamic rule modification API.
+*   **Privacy-First & Data Residency:** The extension must be "offline-first". All prompt calculations and active sessions are stored locally in `chrome.storage.local`. Never compile or send raw prompt text or API keys to external cloud logs.
+*   **Background Lifecycle:** The service worker (`background.js`) is ephemeral. Store all persistence states in storage rather than global variables in-memory.
+
+---
+
+## 4. UI/UX & Styling Standards
+
+*   **Theme Aesthetics:** Modern high-contrast dark foundations. Use Slate-950 (`bg-slate-950`) as the canvas base, Emerald-500 (`text-emerald-500`) for currency, pricing, and active metrics, and Slate-400 for secondary descriptions.
+*   **Vanilla Tailwind CSS:** Always use clean, native utility classes. Avoid creating custom CSS stylesheets or ad-hoc utilities.
+*   **Visual Fidelity:** Ensure all simulated extension mockups (like the `/playground` route) use a 100% Tailwind-styled DOM container instead of blurry or non-responsive `<canvas>` drawings. Incorporate micro-animations and slide-in toast notifications.
+
+---
+
+## 5. Collaboration & Code Quality Rules
+
+*   **No Placeholders:** Generate complete, fully-functioning, deployment-ready files. Never write placeholders like `// TODO: Implement later` or truncate code.
+*   **Preserve Documentation:** Retain all licensing notices, GDPR privacy statements, and architectural comments unless explicitly asked to modify them.
