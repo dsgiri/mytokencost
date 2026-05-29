@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={`${spaceGrotesk.variable} antialiased`}>
+        <body className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"

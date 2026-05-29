@@ -1,11 +1,9 @@
 import Link from 'next/link';
 import { ThemeToggle } from "./ThemeToggle";
-import { SignInButton, UserButton } from "@clerk/nextjs";
-import { auth } from "@clerk/nextjs/server";
+import { TextScaleToggle } from "./TextScaleToggle";
+import { HeaderAuthActions } from "./HeaderAuthActions";
 
-export async function Header() {
-  const { userId } = await auth();
-
+export function Header() {
   return (
     <header className="border-b border-slate-200/80 dark:border-slate-800/80 bg-white/85 dark:bg-slate-950/85 backdrop-blur-md sticky top-0 z-40 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
@@ -45,26 +43,9 @@ export async function Header() {
 
           {/* User Operations & primary transaction trigger */}
           <div className="flex items-center space-x-3.5">
+            <TextScaleToggle />
             <ThemeToggle />
-
-            {!userId ? (
-              <SignInButton mode="modal">
-                <button className="hidden md:inline-flex text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition uppercase tracking-wider font-bold cursor-pointer">
-                  Client Login
-                </button>
-              </SignInButton>
-            ) : (
-              <>
-                <Link href="/portal" className="hidden md:inline-flex text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition uppercase tracking-wider font-bold">
-                  Dashboard
-                </Link>
-                <UserButton appearance={{ elements: { userButtonAvatarBox: "w-8 h-8 rounded-md" } }} />
-              </>
-            )}
-
-            <Link href="/contact?type=demo" className="bg-blue-600 hover:bg-blue-500 dark:bg-[#00f0ff] dark:hover:bg-[#00d8e6] text-white dark:text-slate-950 font-extrabold px-4.5 py-2.5 rounded-xl text-xs tracking-wider uppercase transition-all shadow-md shadow-blue-500/10 dark:shadow-cyan-500/5 hover:scale-[1.02] active:scale-[0.98]">
-              Book a Demo
-            </Link>
+            <HeaderAuthActions />
           </div>
         </div>
 

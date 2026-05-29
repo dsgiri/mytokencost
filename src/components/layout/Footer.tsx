@@ -18,6 +18,7 @@ export function Footer() {
           {/* Resources */}
           <div className="flex flex-col space-y-3">
             <h3 className="text-slate-900 dark:text-white font-bold tracking-wider uppercase text-xs mb-2">Resources</h3>
+            <Link href="/calc" className="hover:text-blue-600 dark:hover:text-[#00f0ff] transition text-xs">Interactive Calculators</Link>
             <Link href="/blueprints" className="hover:text-blue-600 dark:hover:text-[#00f0ff] transition text-xs">SOP Blueprints</Link>
             <Link href="/blogs" className="hover:text-blue-600 dark:hover:text-[#00f0ff] transition text-xs">Intelligence Blog</Link>
             <Link href="/faq" className="hover:text-blue-600 dark:hover:text-[#00f0ff] transition text-xs">Knowledge Base / FAQ</Link>

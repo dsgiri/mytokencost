@@ -68,6 +68,26 @@ const SANDBOX_ROUTES: SandboxRoute[] = [
       auth: "Secure Sandbox Logging"
     },
     badgeColor: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
+  },
+  {
+    title: "MTC Interactive Calculators Sandbox Hub",
+    path: "/sandbox/ui-ux/calc",
+    description: "A centralized hub staging both our highly shareable B2C viral calculators (ChatGPT history auditors, break-even meters) and specialized Texas utility compliance tools.",
+    status: "new",
+    features: [
+      "Dynamic Sidebar Filter & Live Keyword Search Grid",
+      "Private drag-and-drop ChatGPT / Claude History Auditor mockup",
+      "Frictionless Subscription vs API Key Break-Even slider metrics",
+      "Runaway Agent Loop 'Apocalypse Bill' terminal simulator",
+      "Integrated SEO-optimized methodology and regulatory help articles",
+      "Frictionless lead-capture CTA models (B2C report PDFs & B2B scheduling)"
+    ],
+    specs: {
+      language: "TypeScript / React",
+      engine: "Next.js App Router",
+      auth: "Offline-First Data Storage"
+    },
+    badgeColor: "bg-emerald-500/10 border-emerald-500/20 text-emerald-400"
   }
 ];
 

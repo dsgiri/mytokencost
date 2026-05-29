@@ -9,6 +9,7 @@ const isPublicRoute = createRouteMatcher([
   '/blueprints',
   '/blogs',
   '/legal(.*)',
+  '/sandbox(.*)',
   '/api/webhooks/stripe',
 ])
 

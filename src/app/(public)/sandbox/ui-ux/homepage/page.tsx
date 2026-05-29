@@ -73,13 +73,13 @@ export default function SandboxUiUxHomepage() {
             </p>
             <div className="pt-2 flex flex-wrap gap-4 text-[10px] text-slate-500 font-mono">
               <span className="flex items-center gap-1">
-                ✅ Dynamic Context-Aware Labels (Compliance Matrix)
+                ✅ 3-Axis Telemetry Dashboard (Compute, Energy, Cooling)
               </span>
               <span className="flex items-center gap-1">
-                ✅ Segments & Dynamic Tabs (Lead Intake)
+                ✅ 15-Min Free Call & $1,499 Playbook B2B Ladder
               </span>
               <span className="flex items-center gap-1">
-                ✅ Zero Type Safety Compiler Faults
+                ✅ AI-Focused Physical Auditing Verticals
               </span>
             </div>
           </div>

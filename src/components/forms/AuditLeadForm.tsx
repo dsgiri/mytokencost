@@ -140,31 +140,31 @@ export function AuditLeadForm() {
   // Visual highlights and badges configuration
   const tabConfig = {
     demo: {
-      badge: "Zero-Risk Walkthrough",
+      badge: "15-Min Free Call",
       badgeColor: "bg-cyan-500/10 text-cyan-400 border-cyan-500/25",
       glowColor: "from-cyan-500 to-blue-500",
       focusBorder: "focus:border-cyan-500",
       ctaBg: "bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-cyan-500/10",
-      ctaText: "Request Free Product Demo",
+      ctaText: "Schedule Free Call",
       subLabel: "⚡ Calendar scheduling link sent instantly to your inbox.",
       icon: <Sparkles className="w-4 h-4 animate-pulse" />,
-      checklistTitle: "INCLUDED IN THE DEMO SESSION",
+      checklistTitle: "INCLUDED IN THE 15-MIN CALL",
       checklist: [
-        { label: "Live Simulator Tour", desc: "Dynamic sandbox demonstrating how our telemetry extension blocks rogue prompts." },
-        { label: "Budget-Cap Sandbox", desc: "Interactive configuration of MV3 declarative net security rules." },
-        { label: "Custom Override Walkthrough", desc: "Step-by-step custom rate card and token estimation setup." }
+        { label: "Live Simulator Tour", desc: "Dynamic sandbox tour explaining custom rate cards and token metrics." },
+        { label: "DNR Security Setup", desc: "How MV3 rules block rogue outbound calls without code changes." },
+        { label: "Grid Stress Assessment", desc: "Initial analysis of your grid-stress zones and local utility tier bottlenecks." }
       ]
     },
     audit: {
-      badge: "SEC Compliance Gateway",
+      badge: "Compliance Playbook",
       badgeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/25",
       glowColor: "from-emerald-500 to-teal-500",
       focusBorder: "focus:border-emerald-500",
       ctaBg: "bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/10",
-      ctaText: "Secure Playbook ($1,499)",
-      subLabel: "🔐 Secure checkout with 30-day corporate assurance guarantee.",
+      ctaText: "Request $1,499 Playbook",
+      subLabel: "🔐 Lock in an audit-ready compliance playbook in 7 days.",
       icon: <ShieldCheck className="w-4 h-4" />,
-      checklistTitle: "INCLUDED IN THE AUDIT PACKAGE",
+      checklistTitle: "INCLUDED IN THE AUDIT PLAYBOOK",
       checklist: [
         { label: "7-Day Playbook Delivery", desc: "Custom audit-ready compliance strategy and SEC reporting blueprints." },
         { label: "Proactive Bottleneck Audit", desc: "Identify and resolve state utility caps before rate penalties trigger." },
@@ -212,7 +212,7 @@ export function AuditLeadForm() {
             }`}
           >
             <Sparkles className="w-3.5 h-3.5" />
-            Book Free Demo
+            15-Min Free Call
           </button>
           <button
             type="button"
@@ -254,13 +254,13 @@ export function AuditLeadForm() {
                 </div>
                 <div>
                   <h3 className="font-space-grotesk text-xl font-extrabold text-white tracking-tight">
-                    {activeTab === "demo" && "Schedule Zero-Risk Walkthrough"}
-                    {activeTab === "audit" && "Book Priority Compliance Audit"}
+                    {activeTab === "demo" && "Schedule 15-Min Free Call"}
+                    {activeTab === "audit" && "Secure Compliance Playbook"}
                     {activeTab === "enterprise" && "Contact Corporate Engineering"}
                   </h3>
-                  <p className="text-[11px] text-slate-400 leading-relaxed mt-0.5">
-                    {activeTab === "demo" && "Provide your contact coordinates below. We will demonstrate how to enforce real-time rate card telemetry in your ecosystem."}
-                    {activeTab === "audit" && "Lock in your SEC compliance playbook. Complete your grid identifiers to launch remote non-invasive grid audits."}
+                  <p className="text-[11px] text-slate-400 leading-relaxed mt-0.5 font-medium">
+                    {activeTab === "demo" && "Provide your contact coordinates below. We will coordinate a call to demonstrate how to enforce real-time rate card telemetry in your ecosystem."}
+                    {activeTab === "audit" && "Sourcing errors or missing state agency reporting criteria can trigger crippling utility fees or license suspensions. Lock in an audit-ready compliance playbook in 7 days."}
                     {activeTab === "enterprise" && "Inquire about custom dedicated nodes, white-labeled reporting integrations, or direct database replica streaming."}
                   </p>
                 </div>
