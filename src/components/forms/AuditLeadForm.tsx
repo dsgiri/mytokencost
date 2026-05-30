@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { 
-  Building, 
   Mail, 
   Zap, 
   CheckCircle2, 
@@ -10,13 +9,13 @@ import {
   Sparkles, 
   RefreshCw, 
   ArrowRight,
-  Database,
   PhoneCall,
-  User
+  User,
+  HelpCircle
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
-type TabMode = "general" | "audit" | "enterprise";
+type TabMode = "general" | "demo" | "touchbase";
 
 export function AuditLeadForm() {
   const [activeTab, setActiveTab] = useState<TabMode>("general");
@@ -37,10 +36,10 @@ export function AuditLeadForm() {
       const type = params.get("type");
       if (type) {
         const targetTab = 
-          (type === "demo" || type === "audit") 
-            ? "audit" 
-            : type === "enterprise" 
-              ? "enterprise" 
+          type === "demo" 
+            ? "demo" 
+            : type === "touchbase" 
+              ? "touchbase" 
               : "general";
         const timer = setTimeout(() => {
           setActiveTab(targetTab);
@@ -66,9 +65,8 @@ export function AuditLeadForm() {
           email: formData.email,
           lead_type: activeTab,
           details: {
-            location: activeTab === "audit" ? formData.location : undefined,
-            org_size: activeTab === "enterprise" ? formData.orgSize : undefined,
-            hurdle: activeTab === "general" || activeTab === "enterprise" ? formData.hurdle : undefined
+            location: activeTab === "touchbase" ? formData.location : undefined,
+            hurdle: formData.hurdle || undefined
           },
           created_at: new Date().toISOString()
         });
@@ -86,19 +84,16 @@ export function AuditLeadForm() {
     try {
       const payload: Record<string, string> = {
         access_key: process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || "",
-        subject: `New B2B ${activeTab.toUpperCase()} Lead - MyTokenCost.com`,
+        subject: `New Lead [${activeTab.toUpperCase()}] - MyTokenCost.com`,
         lead_type: activeTab,
         name: formData.name,
         email: formData.email,
       };
 
-      if (activeTab === "general") {
+      if (activeTab === "touchbase") {
+        payload.context_location = formData.location;
+      } else {
         payload.message = formData.hurdle;
-      } else if (activeTab === "audit") {
-        payload.grid_region_location = formData.location;
-      } else if (activeTab === "enterprise") {
-        payload.est_monthly_tokens = formData.orgSize;
-        payload.compliance_hurdle = formData.hurdle;
       }
 
       // Only execute Web3Forms request if access key is configured
@@ -144,26 +139,26 @@ export function AuditLeadForm() {
   if (status === "success") {
     const successMessages = {
       general: "Your inquiry has been received. Our support team will reach out to you within 24 hours.",
-      audit: "Our compliance engineering team will contact you within 24 hours to coordinate your custom compliance playbook scheduling.",
-      enterprise: "Your enterprise engineering consultation ticket is locked. A lead architect will contact you in under 2 hours."
+      demo: "Our engineering team has received your demo request and will reach out to schedule your walkthrough.",
+      touchbase: "We have locked in your 15-minute touchbase. Keep an eye on your inbox for the direct calendar scheduling link!"
     };
 
     const borders = {
       general: "border-cyan-500 bg-cyan-500/5",
-      audit: "border-emerald-500 bg-emerald-500/5",
-      enterprise: "border-indigo-500 bg-indigo-500/5"
+      demo: "border-emerald-500 bg-emerald-500/5",
+      touchbase: "border-indigo-500 bg-indigo-500/5"
     };
 
     const textColors = {
       general: "text-cyan-400",
-      audit: "text-emerald-400",
-      enterprise: "text-indigo-400"
+      demo: "text-emerald-400",
+      touchbase: "text-indigo-400"
     };
 
     const glowColors = {
       general: "bg-cyan-500",
-      audit: "bg-emerald-500",
-      enterprise: "bg-indigo-500"
+      demo: "bg-emerald-500",
+      touchbase: "bg-indigo-500"
     };
 
     return (
@@ -171,14 +166,14 @@ export function AuditLeadForm() {
         <div className={`absolute top-0 left-0 w-full h-1 ${glowColors[activeTab]}`} />
         <div className={`h-12 w-12 rounded-full flex items-center justify-center mx-auto border ${
           activeTab === "general" ? "bg-cyan-500/10 border-cyan-500/20" : 
-          activeTab === "audit" ? "bg-emerald-500/10 border-emerald-500/20" : 
+          activeTab === "demo" ? "bg-emerald-500/10 border-emerald-500/20" : 
           "bg-indigo-500/10 border-indigo-500/20"
         }`}>
           <CheckCircle2 className={`w-6 h-6 animate-pulse ${textColors[activeTab]}`} />
         </div>
         <div className="space-y-1">
           <h3 className={`font-extrabold font-space-grotesk text-lg tracking-tight ${textColors[activeTab]}`}>
-            Request Received
+            Inquiry Received
           </h3>
           <p className="text-xs text-slate-400 leading-relaxed max-w-sm mx-auto">
             {successMessages[activeTab]}
@@ -191,51 +186,51 @@ export function AuditLeadForm() {
   // Visual highlights and badges configuration
   const tabConfig = {
     general: {
-      badge: "Quick Response",
+      badge: "General Enquiry",
       badgeColor: "bg-cyan-500/10 text-cyan-400 border-cyan-500/25",
       glowColor: "from-cyan-500 to-blue-500",
       focusBorder: "focus:border-cyan-500",
       ctaBg: "bg-cyan-500 hover:bg-cyan-400 text-slate-950 shadow-cyan-500/10",
-      ctaText: "Send Inquiry",
-      subLabel: "📨 Direct email routed straight to core engineering queue.",
-      icon: <Sparkles className="w-4 h-4 animate-pulse" />,
-      checklistTitle: "SUPPORT & INQUIRY BENEFITS",
+      ctaText: "Send Enquiry",
+      subLabel: "📨 Direct email routed straight to support queue.",
+      icon: <HelpCircle className="w-4 h-4" />,
+      checklistTitle: "ENQUIRY SUPPORT BENEFITS",
       checklist: [
-        { label: "Fast Response", desc: "Get a direct reply from our core engineering team in under 24 hours." },
-        { label: "15-Min Free Call", desc: "Option to schedule a quick 1-on-1 walkthrough if you prefer." },
-        { label: "Direct Support", desc: "For resolving technical hurdles, calculations questions, or integrations." }
+        { label: "Under 24h Response", desc: "A direct reply from our core engineering team." },
+        { label: "Zero Spam Policy", desc: "We strictly value your privacy and never sell details." },
+        { label: "Direct Triage", desc: "For billing support, feedback, custom features, or questions." }
       ]
     },
-    audit: {
-      badge: "Certified Playbook",
+    demo: {
+      badge: "Demo Request",
       badgeColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/25",
       glowColor: "from-emerald-500 to-teal-500",
       focusBorder: "focus:border-emerald-500",
       ctaBg: "bg-emerald-500 hover:bg-emerald-400 text-slate-950 shadow-emerald-500/10",
-      ctaText: "Request Compliance Audit",
-      subLabel: "🔐 Lock in an audit-ready compliance playbook in 7 days.",
-      icon: <ShieldCheck className="w-4 h-4" />,
-      checklistTitle: "INCLUDED IN THE AUDIT PLAYBOOK",
+      ctaText: "Request Live Demo",
+      subLabel: "🔐 Secure access to our sandbox environment.",
+      icon: <Sparkles className="w-4 h-4 animate-pulse" />,
+      checklistTitle: "LIVE DEMO EXPERIENCE",
       checklist: [
-        { label: "7-Day Custom Strategy", desc: "Personalized compliance playbook matching your exact grid/facility setup." },
-        { label: "Identify Bottlenecks", desc: "Clear roadmaps to spot and resolve operational limits before penalties trigger." },
-        { label: "100% Remote Audit", desc: "Safe, non-invasive remote telemetry mapping—no physical setups required." }
+        { label: "Interactive Walkthrough", desc: "See our dynamic compliance tools operating in real-time." },
+        { label: "Custom Configuration", desc: "Let's live-configure calculators matching your setup." },
+        { label: "Direct Q&A", desc: "Get real answers straight from our active development team." }
       ]
     },
-    enterprise: {
-      badge: "Corporate Scaling",
+    touchbase: {
+      badge: "15min TouchBase",
       badgeColor: "bg-indigo-500/10 text-indigo-400 border-indigo-500/25",
       glowColor: "from-indigo-500 to-purple-500",
       focusBorder: "focus:border-indigo-500",
       ctaBg: "bg-indigo-650 hover:bg-indigo-500 text-white shadow-indigo-500/10",
-      ctaText: "Contact Corporate Engineering",
-      subLabel: "🤝 NDA-protected. Direct connection to lead architects.",
-      icon: <Building className="w-4 h-4" />,
-      checklistTitle: "ENTERPRISE SUPPORT BENEFITS",
+      ctaText: "Request Brief Call",
+      subLabel: "🤝 Just 15 minutes of pure math and logic—no fluff.",
+      icon: <PhoneCall className="w-4 h-4" />,
+      checklistTitle: "strictly 15 minutes",
       checklist: [
-        { label: "Custom Dashboards", desc: "Tailored dashboard layouts and white-labeled reporting built for your workflow." },
-        { label: "Direct Slack Support", desc: "A direct messaging channel straight to our core development architects." },
-        { label: "Enterprise SLA & Security", desc: "Dedicated uptime guarantees, custom NDAs, and comprehensive privacy compliance." }
+        { label: "Strict Time limit", desc: "Your time is respected. We jump directly to details." },
+        { label: "Instant Calendar Link", desc: "Book a slot instantly in your own timezone." },
+        { label: "Zero Sales Pressure", desc: "Speak directly with builders, not quota-carrying sales reps." }
       ]
     }
   };
@@ -262,32 +257,32 @@ export function AuditLeadForm() {
                 : "text-slate-300 hover:text-white hover:bg-slate-800/50"
             }`}
           >
-            <Sparkles className="w-3.5 h-3.5" />
-            General Inquiry
+            <HelpCircle className="w-3.5 h-3.5" />
+            General Enquiry
           </button>
           <button
             type="button"
-            onClick={() => { setActiveTab("audit"); setStatus("idle"); }}
+            onClick={() => { setActiveTab("demo"); setStatus("idle"); }}
             className={`flex-1 min-w-[130px] text-center py-2.5 px-3 rounded-xl text-[10px] font-extrabold uppercase tracking-wider transition-all duration-300 cursor-pointer flex items-center justify-center gap-1.5 ${
-              activeTab === "audit"
+              activeTab === "demo"
                 ? "bg-slate-800/90 text-emerald-400 border border-emerald-500/20 shadow-md shadow-emerald-500/5"
                 : "text-slate-300 hover:text-white hover:bg-slate-800/50"
             }`}
           >
-            <ShieldCheck className="w-3.5 h-3.5" />
-            Audit Inquiry
+            <Sparkles className="w-3.5 h-3.5" />
+            Demo Request
           </button>
           <button
             type="button"
-            onClick={() => { setActiveTab("enterprise"); setStatus("idle"); }}
+            onClick={() => { setActiveTab("touchbase"); setStatus("idle"); }}
             className={`flex-1 min-w-[130px] text-center py-2.5 px-3 rounded-xl text-[10px] font-extrabold uppercase tracking-wider transition-all duration-300 cursor-pointer flex items-center justify-center gap-1.5 ${
-              activeTab === "enterprise"
+              activeTab === "touchbase"
                 ? "bg-slate-800/90 text-indigo-400 border border-indigo-500/20 shadow-md shadow-indigo-500/5"
                 : "text-slate-300 hover:text-white hover:bg-slate-800/50"
             }`}
           >
-            <Building className="w-3.5 h-3.5" />
-            Enterprise Sales
+            <PhoneCall className="w-3.5 h-3.5" />
+            15min TouchBase
           </button>
         </div>
 
@@ -305,14 +300,14 @@ export function AuditLeadForm() {
                 </div>
                 <div>
                   <h3 className="font-space-grotesk text-xl font-extrabold text-white tracking-tight">
-                    {activeTab === "general" && "General Support & Feedback"}
-                    {activeTab === "audit" && "Secure Compliance Playbook"}
-                    {activeTab === "enterprise" && "Contact Corporate Engineering"}
+                    {activeTab === "general" && "General Support & Questions"}
+                    {activeTab === "demo" && "Request live Demo Walkthrough"}
+                    {activeTab === "touchbase" && "Book a low-friction 15m Call"}
                   </h3>
                   <p className="text-[11px] text-slate-400 leading-relaxed mt-0.5 font-medium">
-                    {activeTab === "general" && "Get in touch for technical support, billing queries, feature feedback, or to schedule a free 1-on-1 walkthrough."}
-                    {activeTab === "audit" && "Sourcing errors or missing agency compliance metrics can trigger severe utility penalties or regulatory reviews. Lock in an audit-ready compliance playbook in 7 days."}
-                    {activeTab === "enterprise" && "Inquire about custom white-labeled reporting integrations, high-volume scaling, and custom SLA support setups."}
+                    {activeTab === "general" && "Get in touch for billing questions, feature feedback, custom integrations, or general math questions."}
+                    {activeTab === "demo" && "Request an interactive sandbox walkthrough to verify token metrics, compliance triggers, and API spend opex."}
+                    {activeTab === "touchbase" && "Schedule a strict, zero-pressure 15-minute sync with our core engineering architects."}
                   </p>
                 </div>
               </div>
@@ -355,73 +350,38 @@ export function AuditLeadForm() {
                 </div>
 
                 {/* Conditional Specific Inputs based on Active Tab */}
-                {activeTab === "general" && (
+                {activeTab !== "touchbase" ? (
                   <div className="space-y-1">
                     <label className="block text-[10px] text-slate-300 font-bold uppercase tracking-wider">
-                      How can we help you?
+                      {activeTab === "general" ? "How can we help you?" : "What are you looking to calculate or optimize?"}
                     </label>
                     <div className="relative">
                       <Zap className="w-3.5 h-3.5 text-slate-500 absolute left-3.5 top-3" />
                       <textarea
                         required
-                        placeholder="e.g. Technical support query, billing help, feature suggestions, or scheduling a free 1-on-1 demo call."
+                        placeholder={
+                          activeTab === "general" 
+                            ? "e.g. Technical support query, billing help, feature suggestions, or general business questions."
+                            : "e.g. We want to check our data center WUE aquifer limits, or see if HHSC rules apply to our care facilities."
+                        }
                         value={formData.hurdle}
                         onChange={(e) => setFormData({ ...formData, hurdle: e.target.value })}
                         className={`w-full bg-black border border-slate-700 ${current.focusBorder} rounded-xl py-2.5 pl-9.5 pr-4 text-xs text-white focus:outline-none transition-all font-semibold placeholder:text-slate-400 resize-none h-20`}
                       />
                     </div>
                   </div>
-                )}
-
-                {activeTab === "audit" && (
+                ) : (
                   <div className="space-y-1">
-                    <label className="block text-[10px] text-slate-300 font-bold uppercase tracking-wider">Grid Region / Facility Location</label>
+                    <label className="block text-[10px] text-slate-300 font-bold uppercase tracking-wider">Main Goal / Context (Optional)</label>
                     <div className="relative">
                       <Zap className="w-3.5 h-3.5 text-slate-500 absolute left-3.5 top-3" />
                       <input
                         type="text"
-                        required
-                        placeholder="e.g. Texas ERCOT, California ISO, or Care Facility Address"
+                        placeholder="e.g. Data center opex audit, generator compliance rules"
                         value={formData.location}
                         onChange={(e) => setFormData({ ...formData, location: e.target.value })}
                         className={`w-full bg-black border border-slate-700 ${current.focusBorder} rounded-xl py-2.5 pl-9.5 pr-4 text-xs text-white focus:outline-none transition-all font-semibold placeholder:text-slate-400`}
                       />
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === "enterprise" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                    <div className="space-y-1">
-                      <label className="block text-[10px] text-slate-300 font-bold uppercase tracking-wider">Est. Monthly Tokens</label>
-                      <div className="relative">
-                        <Building className="w-3.5 h-3.5 text-slate-500 absolute left-3.5 top-3" />
-                        <select
-                          value={formData.orgSize}
-                          onChange={(e) => setFormData({ ...formData, orgSize: e.target.value })}
-                          className={`w-full bg-black border border-slate-700 ${current.focusBorder} rounded-xl py-2.5 pl-9.5 pr-10 text-xs text-white focus:outline-none transition-all font-semibold appearance-none cursor-pointer`}
-                        >
-                          <option value="<50M">&lt; 50M Tokens / mo</option>
-                          <option value="50M-500M">50M - 500M / mo</option>
-                          <option value="500M-5B">500M - 5B / mo</option>
-                          <option value="5B+">5B+ Tokens / mo</option>
-                        </select>
-                        <div className="absolute right-3.5 top-3.5 pointer-events-none w-0 h-0 border-l-4 border-l-transparent border-r-4 border-r-transparent border-t-4 border-t-slate-500" />
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-1">
-                      <label className="block text-[10px] text-slate-300 font-bold uppercase tracking-wider">Primary Hurdle / Goal</label>
-                      <div className="relative">
-                        <Zap className="w-3.5 h-3.5 text-slate-500 absolute left-3.5 top-3" />
-                        <input
-                          type="text"
-                          placeholder="e.g. Shadow AI spend, API limits"
-                          value={formData.hurdle}
-                          onChange={(e) => setFormData({ ...formData, hurdle: e.target.value })}
-                          className={`w-full bg-black border border-slate-700 ${current.focusBorder} rounded-xl py-2.5 pl-9.5 pr-4 text-xs text-white focus:outline-none transition-all font-semibold placeholder:text-slate-400`}
-                        />
-                      </div>
                     </div>
                   </div>
                 )}
@@ -443,7 +403,7 @@ export function AuditLeadForm() {
                     <div key={idx} className="flex items-start gap-2.5">
                       <CheckCircle2 className={`w-4 h-4 flex-shrink-0 mt-0.5 ${
                         activeTab === "general" ? "text-cyan-400" : 
-                        activeTab === "audit" ? "text-emerald-400" : 
+                        activeTab === "demo" ? "text-emerald-400" : 
                         "text-indigo-400"
                       }`} />
                       <span>
@@ -468,9 +428,9 @@ export function AuditLeadForm() {
                     </>
                   ) : (
                     <>
-                      {activeTab === "general" && <PhoneCall className="w-4.5 h-4.5" />}
-                      {activeTab === "audit" && <ShieldCheck className="w-4.5 h-4.5" />}
-                      {activeTab === "enterprise" && <Database className="w-4.5 h-4.5" />}
+                      {activeTab === "general" && <HelpCircle className="w-4.5 h-4.5" />}
+                      {activeTab === "demo" && <Sparkles className="w-4.5 h-4.5" />}
+                      {activeTab === "touchbase" && <PhoneCall className="w-4.5 h-4.5" />}
                       {current.ctaText}
                       <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" />
                     </>
